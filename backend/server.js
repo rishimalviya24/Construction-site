@@ -48,4 +48,8 @@ app.use("/api/projects", require("./routes/projects"));
 
 app.get("/", (req, res) => res.json({ message: "Construction Site API ✅" }));
 
+app.get("*name", (req, res) => {
+  res.sendFile(path.join(__dirname,"../index.html"))
+})
+
 app.listen(PORT, () => console.log("🚀 Server on port " + PORT));
