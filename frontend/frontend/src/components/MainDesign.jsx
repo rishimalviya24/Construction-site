@@ -63,54 +63,7 @@ function useProjects() {
 const icon = (n, c) => I[n] ? I[n](c) : null;
 
 function Img({ label = "Bild einfügen", h = 320, r = 16 }) {
-  // Rich dummy visual content instead of empty placeholder
-  const isTeam = label.toLowerCase().includes("team");
-  if (isTeam) {
-    return (
-      <div style={{ width: "100%", borderRadius: r, overflow: "hidden", background: C.stoneLight, position: "relative", minHeight: h }}>
-        {/* Decorative background */}
-        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(135deg, " + C.stoneLight + " 0%, " + C.stonePale + " 100%)" }} />
-        <div style={{ position: "absolute", top: -60, right: -60, width: 300, height: 300, borderRadius: "50%", background: "rgba(167,139,113,0.12)" }} />
-        <div style={{ position: "absolute", bottom: -40, left: -40, width: 200, height: 200, borderRadius: "50%", background: "rgba(167,139,113,0.08)" }} />
-        {/* Content */}
-        <div style={{ position: "relative", zIndex: 1, padding: "48px 40px", height: h, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-          {/* Top: Headline */}
-          <div>
-            <div style={{ fontFamily: ff, fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.15em", color: C.stone, marginBottom: 12 }}>Seit 2018</div>
-            <h3 style={{ fontFamily: fd, fontSize: "clamp(22px,3vw,32px)", fontWeight: 400, color: C.black, letterSpacing: "-0.02em", lineHeight: 1.2, margin: 0 }}>
-              Direkt aus<br />der Region Zürich.
-            </h3>
-          </div>
-          {/* Middle: Stats row */}
-          <div style={{ display: "flex", gap: 0, background: "rgba(255,255,255,0.6)", borderRadius: 16, overflow: "hidden", backdropFilter: "blur(8px)" }}>
-            {[["50+", "Projekte abgeschlossen"], ["100%", "Entsorgungsnachweis"], ["48h", "Offerte garantiert"]].map(([num, txt], i) => (
-              <div key={i} style={{ flex: 1, padding: "24px 20px", borderRight: i < 2 ? "0.5px solid rgba(167,139,113,0.2)" : "none", textAlign: "center" }}>
-                <div style={{ fontFamily: fd, fontSize: "clamp(24px,3vw,32px)", fontWeight: 400, color: C.black, letterSpacing: "-0.03em", lineHeight: 1 }}>{num}</div>
-                <div style={{ fontFamily: ff, fontSize: 12, color: C.gray, marginTop: 6, lineHeight: 1.4 }}>{txt}</div>
-              </div>
-            ))}
-          </div>
-          {/* Bottom: Tags */}
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-            {["Rückbau", "Recycling", "Entsorgung", "Transport", "Sanitär"].map((tag) => (
-              <span key={tag} style={{ fontFamily: ff, fontSize: 12, fontWeight: 500, color: C.stone, background: "rgba(255,255,255,0.7)", borderRadius: 980, padding: "6px 14px", backdropFilter: "blur(4px)" }}>{tag}</span>
-            ))}
-          </div>
-        </div>
-      </div>
-    );
-  }
-  // Default service image placeholder
-  return (
-    <div style={{ width: "100%", borderRadius: r, overflow: "hidden", background: C.stoneLight, position: "relative", minHeight: h, display: "flex", alignItems: "center", justifyContent: "center" }}>
-      <div style={{ position: "absolute", inset: 0, background: "linear-gradient(135deg, " + C.stoneLight + " 0%, " + C.stonePale + " 100%)" }} />
-      <div style={{ position: "absolute", top: -40, right: -40, width: 200, height: 200, borderRadius: "50%", background: "rgba(167,139,113,0.1)" }} />
-      <div style={{ position: "relative", zIndex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 10, color: C.stone }}>
-        {I.eye(C.stone)}
-        <span style={{ fontSize: 13, fontFamily: ff, color: C.stone, fontWeight: 500 }}>{label}</span>
-      </div>
-    </div>
-  );
+  return <div style={{ width: "100%", height: h, background: C.bg, borderRadius: r, display: "flex", alignItems: "center", justifyContent: "center" }}><div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8, color: C.muted }}>{I.eye(C.muted)}<span style={{ fontSize: 13, fontFamily: ff }}>{label}</span></div></div>;
 }
 
 function ProjImg({ src, alt, h = 200, r = 0 }) {
@@ -118,8 +71,8 @@ function ProjImg({ src, alt, h = 200, r = 0 }) {
   return <Img h={h} r={r} />;
 }
 
-function W({ children, bg = C.white, py = 80, sx = {} }) {
-  return <section style={{ padding: "clamp(60px,8vw," + py + "px) clamp(16px,4vw,24px)", background: bg, ...sx }}><div style={{ maxWidth: 1080, margin: "0 auto" }}>{children}</div></section>;
+function W({ children, bg = C.white, py = 120, sx = {} }) {
+  return <section style={{ padding: py + "px 24px", background: bg, ...sx }}><div style={{ maxWidth: 1080, margin: "0 auto" }}>{children}</div></section>;
 }
 
 function Lab({ children }) {
@@ -223,18 +176,7 @@ function ProjectSlider({ go, projects }) {
   const [idx, setIdx] = useState(0);
   const [modal, setModal] = useState(null);
   const [galIdx, setGalIdx] = useState(0);
-  const [visible, setVisible] = useState(3);
-
-  useEffect(() => {
-    const update = () => {
-      const w = window.innerWidth;
-      setVisible(w < 600 ? 1 : w < 900 ? 2 : 3);
-    };
-    update();
-    window.addEventListener("resize", update);
-    return () => window.removeEventListener("resize", update);
-  }, []);
-
+  const visible = 3;
   const maxIdx = Math.max(0, projects.length - visible);
   const prev = () => setIdx((i) => Math.max(0, i - 1));
   const next = () => setIdx((i) => Math.min(maxIdx, i + 1));
@@ -245,35 +187,32 @@ function ProjectSlider({ go, projects }) {
     </div>
   );
 
-  const gap = 16;
-  const cardW = `calc((100% - ${(visible - 1) * gap}px) / ${visible})`;
-
   return (
     <>
       <div style={{ position: "relative" }}>
         <div style={{ overflow: "hidden", borderRadius: 20 }}>
-          <div style={{ display: "flex", gap: gap, transition: "transform 0.5s cubic-bezier(.4,0,.2,1)", transform: `translateX(calc(-${idx} * (${cardW} + ${gap}px)))` }}>
+          <div style={{ display: "flex", gap: 20, transition: "transform 0.5s cubic-bezier(.4,0,.2,1)", transform: "translateX(-" + (idx * (100 / visible + 20 / visible)) + "%)" }}>
             {projects.map((p, i) => (
-              <div key={p._id || i} style={{ minWidth: cardW, flexShrink: 0, borderRadius: 16, overflow: "hidden", background: C.bg, cursor: "pointer", boxShadow: "0 2px 12px rgba(0,0,0,0.06)" }} onClick={() => { setModal(p); setGalIdx(0); }}>
+              <div key={p._id || i} style={{ minWidth: "calc((100% - 40px) / 3)", flexShrink: 0, borderRadius: 20, overflow: "hidden", background: C.bg, cursor: "pointer" }} onClick={() => { setModal(p); setGalIdx(0); }}>
                 <div style={{ position: "relative" }}>
                   <ProjImg src={p.mainImageUrl} alt={p.title} h={200} r={0} />
                   <div style={{ position: "absolute", top: 12, right: 12, width: 32, height: 32, borderRadius: 8, background: "rgba(255,255,255,0.85)", backdropFilter: "blur(8px)", display: "flex", alignItems: "center", justifyContent: "center" }}>{I.expand(C.dark)}</div>
                 </div>
-                <div style={{ padding: "16px 18px 20px" }}>
-                  <div style={{ fontFamily: ff, fontSize: 11, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.08em", color: C.stone, marginBottom: 6 }}>{p.category || p.cat}</div>
-                  <h3 style={{ fontFamily: fd, fontSize: 17, fontWeight: 500, color: C.black, marginBottom: 4, letterSpacing: "-0.01em", lineHeight: 1.3 }}>{p.title}</h3>
+                <div style={{ padding: "20px 22px 24px" }}>
+                  <div style={{ fontFamily: ff, fontSize: 11, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.08em", color: C.stone, marginBottom: 8 }}>{p.category || p.cat}</div>
+                  <h3 style={{ fontFamily: fd, fontSize: 18, fontWeight: 500, color: C.black, marginBottom: 6, letterSpacing: "-0.01em" }}>{p.title}</h3>
                   <p style={{ fontFamily: ff, fontSize: 13, color: C.gray, margin: 0 }}>{p.location || p.loc}</p>
                 </div>
               </div>
             ))}
           </div>
         </div>
-        <div style={{ display: "flex", gap: 8, marginTop: 28, justifyContent: "center", alignItems: "center" }}>
-          <button onClick={prev} disabled={idx === 0} style={{ width: 40, height: 40, borderRadius: 20, border: "1.5px solid " + (idx === 0 ? C.line : C.dark), background: "none", cursor: idx === 0 ? "default" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", opacity: idx === 0 ? 0.3 : 1, transition: "opacity 0.2s" }}>{I.chevL(C.dark)}</button>
-          <div style={{ display: "flex", gap: 6, margin: "0 10px" }}>
+        <div style={{ display: "flex", gap: 8, marginTop: 32, justifyContent: "center", alignItems: "center" }}>
+          <button onClick={prev} disabled={idx === 0} style={{ width: 44, height: 44, borderRadius: 22, border: "1.5px solid " + (idx === 0 ? C.line : C.dark), background: "none", cursor: idx === 0 ? "default" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", opacity: idx === 0 ? 0.3 : 1, transition: "opacity 0.2s" }}>{I.chevL(C.dark)}</button>
+          <div style={{ display: "flex", gap: 6, margin: "0 12px" }}>
             {projects.map((_, i) => <div key={i} style={{ width: i === idx ? 20 : 6, height: 6, borderRadius: 3, background: i === idx ? C.stone : C.line, transition: "all 0.3s" }} />)}
           </div>
-          <button onClick={next} disabled={idx >= maxIdx} style={{ width: 40, height: 40, borderRadius: 20, border: "1.5px solid " + (idx >= maxIdx ? C.line : C.dark), background: "none", cursor: idx >= maxIdx ? "default" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", opacity: idx >= maxIdx ? 0.3 : 1, transition: "opacity 0.2s" }}>{I.chevR(C.dark)}</button>
+          <button onClick={next} disabled={idx >= maxIdx} style={{ width: 44, height: 44, borderRadius: 22, border: "1.5px solid " + (idx >= maxIdx ? C.line : C.dark), background: "none", cursor: idx >= maxIdx ? "default" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", opacity: idx >= maxIdx ? 0.3 : 1, transition: "opacity 0.2s" }}>{I.chevR(C.dark)}</button>
         </div>
       </div>
 
@@ -315,7 +254,7 @@ function ProjectSliderWithData({ go }) {
 function Home({ go }) {
   return (
     <div>
-      <section style={{ minHeight: "100vh", display: "flex", flexDirection: "column", justifyContent: "center", padding: "clamp(90px,12vw,140px) 24px 60px", background: C.white, position: "relative", overflow: "hidden" }}>
+      <section style={{ minHeight: "100vh", display: "flex", flexDirection: "column", justifyContent: "center", padding: "140px 24px 100px", background: C.white, position: "relative", overflow: "hidden" }}>
         <div style={{ position: "absolute", top: "10%", right: "-5%", width: 600, height: 600, borderRadius: "50%", background: "radial-gradient(circle, " + C.stonePale + " 0%, transparent 70%)", pointerEvents: "none" }} />
         <div style={{ maxWidth: 1080, margin: "0 auto", width: "100%", position: "relative", zIndex: 1 }}>
           <div style={{ maxWidth: 720 }}>
@@ -344,7 +283,7 @@ function Home({ go }) {
       </div>
 
       {/* Services */}
-      <W bg={C.white} py={80}>
+      <W bg={C.white} py={120}>
         <div style={{ marginBottom: 64 }}>
           <Lab>Leistungen</Lab>
           <h2 style={{ fontFamily: fd, fontSize: "clamp(30px,4.5vw,48px)", fontWeight: 400, color: C.black, letterSpacing: "-0.03em", lineHeight: 1.15, margin: 0 }}>Fünf Dienstleistungen.<br />Eine Anlaufstelle.</h2>
@@ -365,8 +304,8 @@ function Home({ go }) {
       </W>
 
       {/* About teaser */}
-      <W bg={C.bg} py={80}>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 300px), 1fr))", gap: "clamp(32px,5vw,64px)", alignItems: "center" }}>
+      <W bg={C.bg} py={120}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 64, alignItems: "center" }}>
           <Img label="Team- oder Arbeitsfoto" h={460} r={20} />
           <div>
             <Lab>Über uns</Lab>
@@ -379,7 +318,7 @@ function Home({ go }) {
       </W>
 
       {/* Projects Slider */}
-      <W bg={C.white} py={80}>
+      <W bg={C.white} py={120}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: 20, marginBottom: 48 }}>
           <div><Lab>Projekte</Lab><h2 style={{ fontFamily: fd, fontSize: "clamp(26px,3.5vw,40px)", fontWeight: 400, color: C.black, letterSpacing: "-0.03em", margin: 0 }}>Bisherige Arbeiten</h2></div>
           <span onClick={() => go("projekte")} style={{ fontFamily: ff, fontSize: 14, fontWeight: 500, color: C.black, cursor: "pointer", display: "flex", alignItems: "center", gap: 6, borderBottom: "1.5px solid " + C.black, paddingBottom: 3 }}>Alle ansehen {I.arrowR(C.black, 14)}</span>
@@ -388,12 +327,12 @@ function Home({ go }) {
       </W>
 
       {/* Process – redesigned as horizontal timeline */}
-      <W bg={C.bg} py={80}>
+      <W bg={C.bg} py={120}>
         <div style={{ maxWidth: 640, margin: "0 auto 72px", textAlign: "center" }}>
           <Lab>Ablauf</Lab>
           <h2 style={{ fontFamily: fd, fontSize: "clamp(28px,4vw,44px)", fontWeight: 400, color: C.black, letterSpacing: "-0.03em", margin: 0 }}>Vier Schritte, ein Ergebnis.</h2>
         </div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: 32, position: "relative" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 0, position: "relative" }}>
           {/* Connecting line */}
           <div style={{ position: "absolute", top: 20, left: "12.5%", right: "12.5%", height: 1, background: C.line, zIndex: 0 }} />
           {[["phone", "Anfrage", "Sie rufen an oder schreiben uns kurz Ihr Anliegen."], ["eye", "Besichtigung", "Wir kommen vorbei und schauen uns die Situation an. Kostenlos."], ["send", "Offerte", "Innert 48 Stunden erhalten Sie eine transparente Fixpreis-Offerte."], ["check", "Umsetzung", "Termingerecht, sauber und ohne Stress."]].map(([ic, t, d], i) => (
@@ -416,14 +355,14 @@ function Home({ go }) {
 function About({ go }) {
   return (
     <div>
-      <W bg={C.white} py={80} sx={{ paddingBottom: "clamp(40px,6vw,80px)" }}>
+      <W bg={C.white} py={160} sx={{ paddingBottom: 80 }}>
         <div style={{ maxWidth: 640 }}>
           <Lab>Über uns</Lab>
           <h1 style={{ fontFamily: fd, fontSize: "clamp(36px,6vw,60px)", fontWeight: 400, color: C.black, letterSpacing: "-0.03em", lineHeight: 1.1, marginBottom: 28 }}>Wer wir sind – und warum wir das machen.</h1>
           <p style={{ fontFamily: fd, fontSize: 20, color: C.gray, lineHeight: 1.65, fontStyle: "italic" }}>Rückbau, Entsorgung und Recycling verdienen Sorgfalt – nicht nur Tempo.</p>
         </div>
       </W>
-      <W bg={C.white} py={0} sx={{ paddingBottom: "clamp(40px,6vw,80px)" }}><Img label="Teamfoto" h={440} r={24} /></W>
+      <W bg={C.white} py={0} sx={{ paddingBottom: 80 }}><Img label="Teamfoto" h={440} r={24} /></W>
       <W bg={C.white} py={0} sx={{ paddingBottom: 100 }}>
         <div style={{ maxWidth: 640, margin: "0 auto" }}>
           {["Unser Team ist klein, dafür eingespielt. Wir arbeiten mit Erfahrung, Handwerk und den richtigen Geräten – flexibel und schnell.", "Ob Badezimmer-Rückbau, Wohnungsräumung oder Einbringung von Sanitäranlagen: sauber, termingerecht und fair.", "Rund ein Dutzend Projekte in der Region Zürich. Jedes mit dem Anspruch: Der Kunde soll uns weiterempfehlen."].map((t, i) => <p key={i} style={{ fontFamily: ff, fontSize: 17, color: C.dark, lineHeight: 1.85, marginBottom: 24 }}>{t}</p>)}
@@ -450,7 +389,7 @@ function ServicePage({ s, go }) {
   const others = SVC.filter((x) => x.id !== s.id);
   return (
     <div>
-      <W bg={C.white} py={80} sx={{ paddingBottom: "clamp(40px,6vw,80px)" }}>
+      <W bg={C.white} py={160} sx={{ paddingBottom: 80 }}>
         <div style={{ maxWidth: 640 }}>
           <div style={{ display: "inline-flex", alignItems: "center", gap: 10, marginBottom: 24 }}>
             <div style={{ width: 40, height: 40, borderRadius: 12, background: C.stonePale, display: "flex", alignItems: "center", justifyContent: "center" }}>{icon(s.icon, C.stone)}</div>
@@ -501,7 +440,7 @@ function Projects({ go }) {
   const list = f === "Alle" ? projects : projects.filter((p) => (p.category || p.cat) === f);
   return (
     <div>
-      <W bg={C.white} py={80} sx={{ paddingBottom: "clamp(40px,6vw,80px)" }}>
+      <W bg={C.white} py={160} sx={{ paddingBottom: 80 }}>
         <div style={{ maxWidth: 600 }}>
           <Lab>Referenzen</Lab>
           <h1 style={{ fontFamily: fd, fontSize: "clamp(36px,6vw,56px)", fontWeight: 400, color: C.black, letterSpacing: "-0.03em", lineHeight: 1.1, marginBottom: 24 }}>Unsere bisherigen Projekte.</h1>
@@ -571,7 +510,7 @@ function Projects({ go }) {
 function Contact() {
   return (
     <div>
-      <W bg={C.white} py={80} sx={{ paddingBottom: "clamp(40px,6vw,80px)" }}>
+      <W bg={C.white} py={160} sx={{ paddingBottom: 80 }}>
         <div style={{ maxWidth: 560 }}>
           <Lab>Kontakt</Lab>
           <h1 style={{ fontFamily: fd, fontSize: "clamp(36px,6vw,56px)", fontWeight: 400, color: C.black, letterSpacing: "-0.03em", lineHeight: 1.1, marginBottom: 24 }}>Lassen Sie uns sprechen.</h1>
@@ -638,11 +577,7 @@ export default function App() {
         "*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; } " +
         "body { margin:0; -webkit-font-smoothing:antialiased; } " +
         "::selection { background: " + C.stoneLight + "; color: " + C.black + "; } " +
-        "@media(max-width:860px) { section { padding-left:16px!important; padding-right:16px!important; } } " +
-        "@media(max-width:600px) { " +
-          "section { padding-top:clamp(40px,8vw,64px)!important; padding-bottom:clamp(40px,8vw,64px)!important; } " +
-          "h1,h2 { word-break:break-word; } " +
-        "}"
+        "@media(max-width:860px) { section { padding-left:16px!important; padding-right:16px!important; } }"
       }</style>
     </div>
   );
