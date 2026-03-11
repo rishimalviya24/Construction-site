@@ -1,39 +1,25 @@
-# Construction Site — Backend API
+# Construction Site - Backend API
 
-**Live URL:** https://contruction-backend.onrender.com  
-**Frontend:** https://construction-frontend-uk47.onrender.com
+## Local setup
 
-## Tech Stack
-- Node.js + Express
-- MongoDB Atlas
-- JWT Authentication
-- Multer (image uploads)
-- Deployed on Render.com
+1. Copy `.env.example` to `.env`
+2. Fill in `MONGODB_URI` and `JWT_SECRET`
+3. Set `FRONTEND_URL` to your frontend origin
+4. Run:
 
-## Local Development
 ```bash
 npm install
-cp .env.example .env   # fill in your MongoDB URI
 npm run dev
 ```
 
-## API Endpoints
+## Required environment variables
 
-| Method | Route | Auth | Description |
-|--------|-------|------|-------------|
-| GET | `/api/projects` | ❌ | Get all published projects |
-| GET | `/api/projects/all` | ✅ | Get all projects incl. drafts |
-| POST | `/api/projects` | ✅ | Create new project |
-| PUT | `/api/projects/:id` | ✅ | Update project |
-| DELETE | `/api/projects/:id` | ✅ | Delete project |
-| POST | `/api/auth/login` | ❌ | Admin login → JWT token |
-| GET | `/api/auth/verify` | ✅ | Verify JWT token |
-
-## Environment Variables (set in Render Dashboard)
-```
+```env
 PORT=5000
 MONGODB_URI=mongodb+srv://...
-JWT_SECRET=your_secret_key
+JWT_SECRET=change-this-secret
 ADMIN_USERNAME=admin
-ADMIN_PASSWORD=Admin@123
+ADMIN_PASSWORD=admin123
+FRONTEND_URL=http://localhost:5173
+FRONTEND_URLS=http://localhost:4173
 ```

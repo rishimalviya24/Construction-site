@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { PROJECTS_API_URL, withApiBase } from "../lib/api";
 
 const PH = "+41 XX XXX XX XX";
 const WA_LINK = "https://wa.me/41XXXXXXXXX?text=Guten%20Tag";
@@ -46,13 +47,11 @@ const SVC = [
   { id: "sanitaer", title: "Einbringung Sanitäranlagen", sub: "300 kg. Schmales Treppenhaus. Kein Problem.", icon: "wrench", heroSub: "Wenn 300 Kilo durch das Treppenhaus müssen", desc: "Neue Boiler, Wärmepumpen oder Warmwasserspeicher wiegen mehrere hundert Kilo – und müssen dorthin, wo es am engsten ist.", p: ["Sicher an den Zielort – ohne Schäden. Mit Erfahrung und dem richtigen Equipment.", "EFH, MFH oder Gewerbebau. Altes Gerät raus? Erledigen wir gleich mit."], items: ["Vorab-Besichtigung & Ausmessung", "Einbringung mit Spezialequipment", "Sicherer Transport an den Zielort", "Demontage & Entsorgung Altgerät"] },
 ];
 
-const API_BASE = "https://contrction-backend.onrender.com";
-
 function useProjects() {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
-    fetch(`${API_BASE}/api/projects`)
+    fetch(PROJECTS_API_URL)
       .then((r) => r.json())
       .then((d) => setProjects(Array.isArray(d) ? d : []))
       .catch(() => setProjects([]))
@@ -68,7 +67,7 @@ function Img({ label = "Bild einfügen", h = 320, r = 16 }) {
 }
 
 function ProjImg({ src, alt, h = 200, r = 0 }) {
-  if (src) return <img src={`${API_BASE}${src}`} alt={alt || ""} style={{ width: "100%", height: h, objectFit: "cover", borderRadius: r, display: "block" }} />;
+  if (src) return <img src={withApiBase(src)} alt={alt || ""} style={{ width: "100%", height: h, objectFit: "cover", borderRadius: r, display: "block" }} />;
   return <Img h={h} r={r} />;
 }
 
@@ -232,7 +231,7 @@ function ProjectSlider({ go, projects }) {
               {modal.imageUrls?.length > 0 && (
                 <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 28 }}>
                   {modal.imageUrls.map((url, i) => (
-                    <img key={i} src={`${API_BASE}${url}`} alt="" style={{ width: 80, height: 60, objectFit: "cover", borderRadius: 8, cursor: "pointer", border: galIdx === i ? "2px solid " + C.stone : "2px solid transparent" }} onClick={() => setGalIdx(i)} />
+                    <img key={i} src={withApiBase(url)} alt="" style={{ width: 80, height: 60, objectFit: "cover", borderRadius: 8, cursor: "pointer", border: galIdx === i ? "2px solid " + C.stone : "2px solid transparent" }} onClick={() => setGalIdx(i)} />
                   ))}
                 </div>
               )}
@@ -493,7 +492,7 @@ function Projects({ go }) {
               {modal.imageUrls?.length > 0 && (
                 <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 28 }}>
                   {modal.imageUrls.map((url, i) => (
-                    <img key={i} src={`${API_BASE}${url}`} alt="" style={{ width: 90, height: 68, objectFit: "cover", borderRadius: 8, cursor: "pointer", border: "2px solid " + C.line }} />
+                    <img key={i} src={withApiBase(url)} alt="" style={{ width: 90, height: 68, objectFit: "cover", borderRadius: 8, cursor: "pointer", border: "2px solid " + C.line }} />
                   ))}
                 </div>
               )}

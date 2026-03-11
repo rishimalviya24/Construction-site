@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef, useCallback } from "react";
+import { AUTH_API_URL, PROJECTS_API_URL, withApiBase } from "../lib/api";
 
-const BASE = "https://contrction-backend.onrender.com";
-const API = `${BASE}/api/projects`;
-const AUTH_API = `${BASE}/api/auth`;
+const API = PROJECTS_API_URL;
+const AUTH_API = AUTH_API_URL;
 
 // ── Tokens ─────────────────────────────────────────────────────
 const C = {
@@ -189,7 +189,7 @@ function DropZone({ label, multiple, onChange, preview, previews, onRemoveNew, o
       {/* Single preview */}
       {!multiple && (preview || (existingUrls && existingUrls[0])) && (
         <div style={{ marginTop: 12, position: "relative", display: "inline-block" }}>
-          <img src={preview || `${BASE}${existingUrls[0]}`} alt="" style={{ width: 140, height: 100, objectFit: "cover", borderRadius: 10, border: `1px solid ${C.border}`, display: "block" }} />
+          <img src={preview || withApiBase(existingUrls[0])} alt="" style={{ width: 140, height: 100, objectFit: "cover", borderRadius: 10, border: `1px solid ${C.border}`, display: "block" }} />
           <button onClick={() => onRemoveNew && onRemoveNew()} style={{ position: "absolute", top: 5, right: 5, width: 22, height: 22, borderRadius: "50%", background: "rgba(0,0,0,.7)", border: "none", color: "#fff", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>{Ic.x}</button>
         </div>
       )}
@@ -199,7 +199,7 @@ function DropZone({ label, multiple, onChange, preview, previews, onRemoveNew, o
         <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 12 }}>
           {existingUrls?.map((url, i) => (
             <div key={"ex" + i} style={{ position: "relative" }}>
-              <img src={`${BASE}${url}`} alt="" style={{ width: 80, height: 60, objectFit: "cover", borderRadius: 8, border: `1px solid ${C.border}`, display: "block" }} />
+              <img src={withApiBase(url)} alt="" style={{ width: 80, height: 60, objectFit: "cover", borderRadius: 8, border: `1px solid ${C.border}`, display: "block" }} />
               <div style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0, borderRadius: 8, background: "rgba(0,0,0,0)", display: "flex", alignItems: "center", justifyContent: "center", transition: "background .2s" }}
                 onMouseEnter={(e) => e.currentTarget.style.background = "rgba(0,0,0,.5)"}
                 onMouseLeave={(e) => e.currentTarget.style.background = "rgba(0,0,0,0)"}
@@ -427,7 +427,7 @@ function DeleteConfirm({ project, onConfirm, onCancel }) {
 // ── Project Row ────────────────────────────────────────────────
 function ProjectRow({ project, onEdit, onDelete }) {
   const [hov, setHov] = useState(false);
-  const imgSrc = project.mainImageUrl ? `${BASE}${project.mainImage}` : null;
+  const imgSrc = project.mainImageUrl ? withApiBase(project.mainImageUrl) : null;
 
   return (
     <div onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}

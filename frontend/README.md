@@ -1,9 +1,17 @@
-# Construction Site — Frontend
+# Construction Site - Frontend
 
-**Live URL:** https://contrction-frontend.onrender.com  
-**Admin Panel:** https://contrction-frontend.onrender.com/admin  
-**Backend API:** https://contrction-backend.onrender.com
+## Local setup
+
+1. Copy `.env.example` to `.env`
+2. Set `VITE_API_BASE_URL` to your backend URL
+3. Run:
+
+```bash
+npm install
+npm run dev
+```
 
 ## Admin Login
+
 - Username: `admin`
 - Password: `admin123`
