@@ -254,7 +254,7 @@ function ProjectSlider({ go, projects }) {
         <div style={{ overflow: "hidden", borderRadius: 20 }}>
           <div style={{ display: "flex", gap: gap, transition: "transform 0.5s cubic-bezier(.4,0,.2,1)", transform: `translateX(calc(-${idx} * (${cardW} + ${gap}px)))` }}>
             {projects.map((p, i) => (
-              <div key={p._id || i} style={{ minWidth: cardW, flexShrink: 0, borderRadius: 16, overflow: "hidden", background: C.bg, cursor: "pointer", boxShadow: "0 2px 12px rgba(0,0,0,0.06)" }} onClick={() => { setModal(p); setGalIdx(0); }}>
+              <div key={p._id || i} style={{ minWidth: cardW, flexShrink: 0, borderRadius: 16, overflow: "hidden", background: C.bg, cursor: "pointer", boxShadow: "0 2px 12px rgba(0,0,0,0.06)" }} onClick={() => { go("projekte"); }}>
                 <div style={{ position: "relative" }}>
                   <ProjImg src={p.mainImageUrl} alt={p.title} h={200} r={0} />
                   <div style={{ position: "absolute", top: 12, right: 12, width: 32, height: 32, borderRadius: 8, background: "rgba(255,255,255,0.85)", backdropFilter: "blur(8px)", display: "flex", alignItems: "center", justifyContent: "center" }}>{I.expand(C.dark)}</div>
@@ -315,18 +315,18 @@ function ProjectSliderWithData({ go }) {
 function Home({ go }) {
   return (
     <div>
-      <section style={{ minHeight: "100vh", display: "flex", flexDirection: "column", justifyContent: "center", padding: "clamp(90px,12vw,140px) 24px 60px", background: C.white, position: "relative", overflow: "hidden" }}>
+      <section style={{ minHeight: "auto", display: "flex", flexDirection: "column", justifyContent: "center", padding: "clamp(80px,14vw,140px) 24px clamp(48px,6vw,80px)", background: C.white, position: "relative", overflow: "hidden" }}>
         <div style={{ position: "absolute", top: "10%", right: "-5%", width: 600, height: 600, borderRadius: "50%", background: "radial-gradient(circle, " + C.stonePale + " 0%, transparent 70%)", pointerEvents: "none" }} />
         <div style={{ maxWidth: 1080, margin: "0 auto", width: "100%", position: "relative", zIndex: 1 }}>
           <div style={{ maxWidth: 720 }}>
-            <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: C.bg, borderRadius: 980, padding: "7px 16px 7px 10px", marginBottom: 40 }}>
+            <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: C.bg, borderRadius: 980, padding: "7px 16px 7px 10px", marginBottom: "clamp(20px,4vw,40px)" }}>
               <div style={{ width: 7, height: 7, borderRadius: "50%", background: C.stone }} />
               <span style={{ fontFamily: ff, fontSize: 13, fontWeight: 500, color: C.gray }}>Region Zürich</span>
             </div>
-            <h1 style={{ fontFamily: fd, fontSize: "clamp(44px,7vw,80px)", fontWeight: 400, color: C.black, lineHeight: 1.05, letterSpacing: "-0.03em", margin: "0 0 32px" }}>
+            <h1 style={{ fontFamily: fd, fontSize: "clamp(40px,7vw,80px)", fontWeight: 400, color: C.black, lineHeight: 1.05, letterSpacing: "-0.03em", margin: "0 0 clamp(16px,3vw,32px)" }}>
               Rückbau,<br />Recycling &<br /><span style={{ color: C.stone }}>Entsorgung.</span>
             </h1>
-            <p style={{ fontFamily: fd, fontSize: "clamp(17px,2.2vw,22px)", color: C.dark, lineHeight: 1.6, maxWidth: 520, margin: "0 0 48px", fontWeight: 400, fontStyle: "italic" }}>
+            <p style={{ fontFamily: fd, fontSize: "clamp(16px,2.2vw,22px)", color: C.dark, lineHeight: 1.6, maxWidth: 520, margin: "0 0 clamp(28px,4vw,48px)", fontWeight: 400, fontStyle: "italic" }}>
               Wir räumen auf, damit Sie bauen können. Fachgerecht direkt aus der Region.
             </p>
             <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
@@ -340,6 +340,20 @@ function Home({ go }) {
       <div style={{ borderTop: "0.5px solid " + C.line, borderBottom: "0.5px solid " + C.line, padding: "28px 24px", background: C.white }}>
         <div style={{ maxWidth: 1080, margin: "0 auto", display: "flex", justifyContent: "center", gap: "clamp(20px,4vw,56px)", flexWrap: "wrap", fontFamily: ff, fontSize: 13, color: C.gray }}>
           {["Kostenlose Besichtigung", "Fixpreis-Offerten", "Fachgerechte Entsorgung", "Persönlicher Kontakt"].map((t) => <div key={t} style={{ display: "flex", alignItems: "center", gap: 8 }}>{I.check(C.stone)} {t}</div>)}
+        </div>
+      </div>
+
+      {/* === CTA BANNER TOP === */}
+      <div style={{ background: C.black, padding: "clamp(20px,3vw,28px) 24px" }}>
+        <div style={{ maxWidth: 1080, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 20, flexWrap: "wrap" }}>
+          <div>
+            <div style={{ fontFamily: ff, fontSize: "clamp(15px,2vw,18px)", fontWeight: 600, color: C.white, marginBottom: 4 }}>Projekt besprechen? Kostenlose Offerte.</div>
+            <div style={{ fontFamily: ff, fontSize: 13, color: "rgba(255,255,255,0.5)" }}>Kostenlose Besichtigung · Fixpreis · Unverbindlich</div>
+          </div>
+          <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+            <button onClick={() => go("kontakt")} style={{ fontFamily: ff, fontSize: 14, fontWeight: 600, background: C.stone, color: C.white, border: "none", borderRadius: 980, padding: "12px 28px", cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 8 }}>Offerte anfragen {I.arrowR("#fff", 15)}</button>
+            <a href={WA_LINK} target="_blank" rel="noopener noreferrer" style={{ fontFamily: ff, fontSize: 14, fontWeight: 600, color: C.white, background: C.wa, border: "none", borderRadius: 980, padding: "12px 24px", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 8 }}>{I.msg("#fff")} WhatsApp</a>
+          </div>
         </div>
       </div>
 
@@ -367,10 +381,25 @@ function Home({ go }) {
       {/* About teaser */}
       <W bg={C.bg} py={80}>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 300px), 1fr))", gap: "clamp(32px,5vw,64px)", alignItems: "center" }}>
-          <Img label="Team- oder Arbeitsfoto" h={460} r={20} />
+          <div style={{ position: "relative" }}>
+            <div style={{ borderRadius: 20, overflow: "hidden", aspectRatio: "4/5" }}>
+              <img
+                src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800&q=80&fit=crop"
+                alt="Unser Team bei der Arbeit"
+                style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+                onError={(e) => { e.target.src = "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=800&q=80&fit=crop"; }}
+              />
+              <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to bottom, transparent 60%, rgba(0,0,0,0.45) 100%)", borderRadius: 20 }} />
+            </div>
+            {/* WhatsApp button overlay at bottom */}
+            <a href={WA_LINK} target="_blank" rel="noopener noreferrer"
+              style={{ position: "absolute", bottom: 20, left: 20, right: 20, display: "flex", alignItems: "center", justifyContent: "center", gap: 10, background: C.wa, color: "#fff", borderRadius: 14, padding: "14px 20px", fontSize: 15, fontWeight: 600, textDecoration: "none", fontFamily: ff, boxShadow: "0 4px 24px rgba(37,211,102,0.4)" }}>
+              {I.msg("#fff")} Jetzt auf WhatsApp schreiben
+            </a>
+          </div>
           <div>
             <Lab>Über uns</Lab>
-            <h2 style={{ fontFamily: fd, fontSize: "clamp(26px,3.5vw,40px)", fontWeight: 400, color: C.black, letterSpacing: "-0.03em", lineHeight: 1.2, marginBottom: 24 }}>Klein, eingespielt<br />und direkt vor Ort.</h2>
+            <h2 style={{ fontFamily: ff, fontSize: "clamp(26px,3.5vw,40px)", fontWeight: 700, color: C.black, letterSpacing: "-0.02em", lineHeight: 1.2, marginBottom: 24 }}>Klein, eingespielt<br />und direkt vor Ort.</h2>
             <p style={{ fontFamily: ff, fontSize: 16, color: C.dark, lineHeight: 1.8, marginBottom: 16 }}>[Firmenname] ist ein junges Unternehmen aus der Region Zürich. Unser Team ist klein, dafür eingespielt.</p>
             <p style={{ fontFamily: ff, fontSize: 16, color: C.dark, lineHeight: 1.8, marginBottom: 36 }}>Wir arbeiten mit Erfahrung, Handwerk und den richtigen Geräten. Das macht uns flexibel.</p>
             <span onClick={() => go("about")} style={{ fontFamily: ff, fontSize: 15, fontWeight: 500, color: C.black, cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 8, borderBottom: "1.5px solid " + C.black, paddingBottom: 4 }}>Mehr erfahren {I.arrowR(C.black, 15)}</span>
@@ -387,21 +416,30 @@ function Home({ go }) {
         <ProjectSliderWithData go={go} />
       </W>
 
-      {/* Process – redesigned as horizontal timeline */}
+      {/* Process – redesigned as cards with photos */}
       <W bg={C.bg} py={80}>
-        <div style={{ maxWidth: 640, margin: "0 auto 72px", textAlign: "center" }}>
+        <div style={{ maxWidth: 640, margin: "0 auto clamp(40px,6vw,72px)", textAlign: "center" }}>
           <Lab>Ablauf</Lab>
           <h2 style={{ fontFamily: fd, fontSize: "clamp(28px,4vw,44px)", fontWeight: 400, color: C.black, letterSpacing: "-0.03em", margin: 0 }}>Vier Schritte, ein Ergebnis.</h2>
         </div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: 32, position: "relative" }}>
-          {/* Connecting line */}
-          <div style={{ position: "absolute", top: 20, left: "12.5%", right: "12.5%", height: 1, background: C.line, zIndex: 0 }} />
-          {[["phone", "Anfrage", "Sie rufen an oder schreiben uns kurz Ihr Anliegen."], ["eye", "Besichtigung", "Wir kommen vorbei und schauen uns die Situation an. Kostenlos."], ["send", "Offerte", "Innert 48 Stunden erhalten Sie eine transparente Fixpreis-Offerte."], ["check", "Umsetzung", "Termingerecht, sauber und ohne Stress."]].map(([ic, t, d], i) => (
-            <div key={i} style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", position: "relative", zIndex: 1 }}>
-              <div style={{ width: 40, height: 40, borderRadius: 20, background: C.white, border: "2px solid " + C.stone, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 24 }}>{I[ic](C.stone)}</div>
-              <div style={{ fontFamily: fd, fontSize: 14, fontWeight: 500, color: C.stone, marginBottom: 8, fontStyle: "italic" }}>{"0" + (i + 1)}</div>
-              <h3 style={{ fontFamily: fd, fontSize: 20, fontWeight: 500, color: C.black, marginBottom: 10, letterSpacing: "-0.01em" }}>{t}</h3>
-              <p style={{ fontFamily: ff, fontSize: 14, color: C.gray, lineHeight: 1.6, margin: 0, maxWidth: 200 }}>{d}</p>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%,220px), 1fr))", gap: 16 }}>
+          {[
+            { ic: "phone", t: "Anfrage", d: "Sie rufen an oder schreiben uns kurz Ihr Anliegen.", img: "https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=400&q=75&fit=crop" },
+            { ic: "eye", t: "Besichtigung", d: "Wir kommen vorbei und schauen uns die Situation an. Kostenlos.", img: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=400&q=75&fit=crop" },
+            { ic: "send", t: "Offerte", d: "Innert 48 Stunden erhalten Sie eine transparente Fixpreis-Offerte.", img: "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=400&q=75&fit=crop" },
+            { ic: "check", t: "Umsetzung", d: "Termingerecht, sauber und ohne Stress.", img: "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=400&q=75&fit=crop" },
+          ].map(({ ic, t, d, img }, i) => (
+            <div key={i} style={{ background: C.white, borderRadius: 16, overflow: "hidden", display: "flex", flexDirection: "column" }}>
+              <div style={{ position: "relative", height: 140 }}>
+                <img src={img} alt={t} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} onError={(e) => { e.target.style.display = "none"; }} />
+                <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.25)" }} />
+                <div style={{ position: "absolute", top: 14, left: 14, width: 36, height: 36, borderRadius: 18, background: "rgba(255,255,255,0.9)", display: "flex", alignItems: "center", justifyContent: "center" }}>{I[ic](C.stone)}</div>
+                <div style={{ position: "absolute", top: 14, right: 14, fontFamily: fd, fontSize: 13, fontWeight: 500, color: "rgba(255,255,255,0.8)", fontStyle: "italic" }}>{"0" + (i + 1)}</div>
+              </div>
+              <div style={{ padding: "18px 20px 22px" }}>
+                <h3 style={{ fontFamily: ff, fontSize: 16, fontWeight: 700, color: C.black, marginBottom: 8, letterSpacing: "-0.01em" }}>{t}</h3>
+                <p style={{ fontFamily: ff, fontSize: 13, color: C.gray, lineHeight: 1.6, margin: 0 }}>{d}</p>
+              </div>
             </div>
           ))}
         </div>
