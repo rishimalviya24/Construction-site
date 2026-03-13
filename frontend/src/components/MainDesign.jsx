@@ -18,11 +18,11 @@ const ABOUT_P2 = "Wir arbeiten mit Erfahrung, Handwerk und den richtigen Geräte
    Replace Unsplash URLs with your own images
    ══════════════════════════════════════════ */
 const SVC_IMAGES = {
-  rueckbau:  "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=900&q=80",
-  recycling: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=900&q=80",
-  entsorgung:"https://images.unsplash.com/photo-1581093588401-fbb62a02f120?w=900&q=80",
-  transport: "https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?w=900&q=80",
-  sanitaer:  "https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=900&q=80",
+  rueckbau:  "https://plus.unsplash.com/premium_photo-1682722002518-00da1587070e?w=900&auto=format&fit=crop&q=80",
+  recycling: "https://images.unsplash.com/photo-1722695694560-f452b0919d3a?w=900&auto=format&fit=crop&q=80",
+  entsorgung:"https://images.unsplash.com/photo-1761599933915-9953de089a66?w=900&auto=format&fit=crop&q=80",
+  transport: "https://images.unsplash.com/photo-1660477653365-da08afb76379?w=900&auto=format&fit=crop&q=80",
+  sanitaer:  "https://media.istockphoto.com/id/1403002412/photo/sanitary-system-pipeline-in-construction-site-building.webp?a=1&b=1&s=612x612&w=0&k=20&c=kuu8DZDntxQNm_Czs2DFmJ0nhk_-ilbeIW0RCzyQ1ng=",
 };
 // About page team photo
 const ABOUT_TEAM_IMG = "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=900&q=80";
@@ -145,7 +145,7 @@ function Nav({ page, go }) {
             <div style={{ position: "relative" }} onMouseEnter={() => setDd(true)} onMouseLeave={() => setDd(false)}>
               <span style={{ ...lk(isSvc), display: "flex", alignItems: "center", gap: 3 }}>Leistungen {I.chevDown(isSvc ? C.black : C.gray)}</span>
               {dd && (
-                <div style={{ position: "absolute", top: "calc(100% + 10px)", left: "50%", transform: "translateX(-50%)", width: 240, background: "rgba(255,255,255,0.96)", backdropFilter: "blur(24px)", borderRadius: 14, boxShadow: "0 12px 48px rgba(0,0,0,0.08), 0 0 0 0.5px rgba(0,0,0,0.04)", padding: 6 }}>
+                <div style={{ position: "absolute", top:"100%", padding:16, left: "50%", transform: "translateX(-50%)", width: 240, background: "rgba(255,255,255,0.96)", backdropFilter: "blur(24px)", borderRadius: 14, boxShadow: "0 12px 48px rgba(0,0,0,0.08), 0 0 0 0.5px rgba(0,0,0,0.04)" }}>
                   {SVC.map((s) => (
                     <div key={s.id} onClick={() => nav(s.id)}
                       style={{ padding: "10px 14px", borderRadius: 10, cursor: "pointer", display: "flex", alignItems: "center", gap: 11, fontSize: 14, fontFamily: ff, fontWeight: page === s.id ? 600 : 400, color: page === s.id ? C.black : C.dark, background: page === s.id ? C.stonePale : "transparent", transition: "all 0.15s" }}
