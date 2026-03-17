@@ -110,7 +110,10 @@ function Login({ onLogin }) {
   return (
     <div style={{ minHeight: "100vh", background: C.bg, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: ff, padding: 24 }}>
       <div style={{ width: "100%", maxWidth: 400 }}>
+<<<<<<< HEAD
         {/* Logo area */}
+=======
+>>>>>>> a37d912 (final image fix done)
         <div style={{ textAlign: "center", marginBottom: 40 }}>
           <div style={{ width: 56, height: 56, borderRadius: 16, background: C.stoneDim, border: `1px solid ${C.stone}33`, display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px", color: C.stone }}>
             {Ic.logo}
@@ -147,9 +150,13 @@ function Login({ onLogin }) {
               {loading ? <><Spinner /> Signing in…</> : "Sign In"}
             </button>
           </form>
+<<<<<<< HEAD
           <p style={{ textAlign: "center", marginTop: 20, fontSize: 13, color: C.subtle }}>
             Default: <code style={{ color: C.stoneText }}>admin</code> / <code style={{ color: C.stoneText }}>admin123</code>
           </p>
+=======
+          {/* ✅ FIX: Removed default credentials hint for security */}
+>>>>>>> a37d912 (final image fix done)
         </div>
       </div>
     </div>
@@ -186,7 +193,10 @@ function DropZone({ label, multiple, onChange, preview, previews, onRemoveNew, o
       </div>
       <input ref={ref} type="file" accept="image/*" multiple={multiple} style={{ display: "none" }} onChange={(e) => processFiles(e.target.files)} />
 
+<<<<<<< HEAD
       {/* Single preview */}
+=======
+>>>>>>> a37d912 (final image fix done)
       {!multiple && (preview || (existingUrls && existingUrls[0])) && (
         <div style={{ marginTop: 12, position: "relative", display: "inline-block" }}>
           <img src={preview || withApiBase(existingUrls[0])} alt="" style={{ width: 140, height: 100, objectFit: "cover", borderRadius: 10, border: `1px solid ${C.border}`, display: "block" }} />
@@ -194,12 +204,16 @@ function DropZone({ label, multiple, onChange, preview, previews, onRemoveNew, o
         </div>
       )}
 
+<<<<<<< HEAD
       {/* Multiple previews */}
+=======
+>>>>>>> a37d912 (final image fix done)
       {multiple && (
         <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 12 }}>
           {existingUrls?.map((url, i) => (
             <div key={"ex" + i} style={{ position: "relative" }}>
               <img src={withApiBase(url)} alt="" style={{ width: 80, height: 60, objectFit: "cover", borderRadius: 8, border: `1px solid ${C.border}`, display: "block" }} />
+<<<<<<< HEAD
               <div style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0, borderRadius: 8, background: "rgba(0,0,0,0)", display: "flex", alignItems: "center", justifyContent: "center", transition: "background .2s" }}
                 onMouseEnter={(e) => e.currentTarget.style.background = "rgba(0,0,0,.5)"}
                 onMouseLeave={(e) => e.currentTarget.style.background = "rgba(0,0,0,0)"}
@@ -209,6 +223,8 @@ function DropZone({ label, multiple, onChange, preview, previews, onRemoveNew, o
                   onMouseLeave={(e) => { e.currentTarget.style.opacity = 0; }}
                 >{Ic.x}</button>
               </div>
+=======
+>>>>>>> a37d912 (final image fix done)
               <button onClick={() => onRemoveExisting(url)} style={{ position: "absolute", top: 3, right: 3, width: 18, height: 18, borderRadius: "50%", background: "rgba(0,0,0,.65)", border: "none", color: "#fff", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 9 }}>{Ic.x}</button>
             </div>
           ))}
@@ -237,11 +253,19 @@ function ProjectDrawer({ project, onSave, onClose, toast }) {
     newFiles: [], newPreviews: [],
     existingGallery: project.imageUrls || [],
     removeGallery: [],
+<<<<<<< HEAD
+=======
+    youtubeUrl: project.youtubeUrl || "",
+>>>>>>> a37d912 (final image fix done)
   } : {
     title: "", description: "", location: "", category: "", published: true,
     mainFile: null, mainPreview: null, existingMain: [],
     removeMain: false, newFiles: [], newPreviews: [],
     existingGallery: [], removeGallery: [],
+<<<<<<< HEAD
+=======
+    youtubeUrl: "",
+>>>>>>> a37d912 (final image fix done)
   });
   const [saving, setSaving] = useState(false);
   const set = (k, v) => setForm((f) => ({ ...f, [k]: v }));
@@ -283,6 +307,10 @@ function ProjectDrawer({ project, onSave, onClose, toast }) {
       fd.append("location", form.location);
       fd.append("category", form.category);
       fd.append("published", String(form.published));
+<<<<<<< HEAD
+=======
+      fd.append("youtubeUrl", form.youtubeUrl || "");  // ✅ NEW
+>>>>>>> a37d912 (final image fix done)
       if (form.mainFile) fd.append("mainImage", form.mainFile);
       else if (form.removeMain) fd.append("removeMainImage", "true");
       form.newFiles.forEach((f) => fd.append("images", f));
@@ -308,11 +336,16 @@ function ProjectDrawer({ project, onSave, onClose, toast }) {
 
   return (
     <>
+<<<<<<< HEAD
       {/* Backdrop */}
       <div onClick={onClose} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,.6)", zIndex: 100, backdropFilter: "blur(4px)" }} />
       {/* Drawer */}
       <div style={{ position: "fixed", top: 0, right: 0, bottom: 0, width: "min(540px, 100vw)", background: C.card, zIndex: 101, overflowY: "auto", borderLeft: `1px solid ${C.border}`, display: "flex", flexDirection: "column" }}>
         {/* Header */}
+=======
+      <div onClick={onClose} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,.6)", zIndex: 100, backdropFilter: "blur(4px)" }} />
+      <div style={{ position: "fixed", top: 0, right: 0, bottom: 0, width: "min(540px, 100vw)", background: C.card, zIndex: 101, overflowY: "auto", borderLeft: `1px solid ${C.border}`, display: "flex", flexDirection: "column" }}>
+>>>>>>> a37d912 (final image fix done)
         <div style={{ padding: "22px 28px", borderBottom: `1px solid ${C.border}`, display: "flex", alignItems: "center", justifyContent: "space-between", flexShrink: 0, position: "sticky", top: 0, background: C.card, zIndex: 10 }}>
           <div>
             <h2 style={{ fontFamily: fd, fontSize: 20, fontWeight: 500, color: C.white, margin: "0 0 3px" }}>
@@ -323,16 +356,23 @@ function ProjectDrawer({ project, onSave, onClose, toast }) {
           <button onClick={onClose} style={{ width: 36, height: 36, borderRadius: 8, background: C.hover, border: `1px solid ${C.border}`, color: C.muted, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>{Ic.x}</button>
         </div>
 
+<<<<<<< HEAD
         {/* Body */}
         <div style={{ flex: 1, padding: "24px 28px", display: "flex", flexDirection: "column", gap: 22 }}>
           {/* Title */}
+=======
+        <div style={{ flex: 1, padding: "24px 28px", display: "flex", flexDirection: "column", gap: 22 }}>
+>>>>>>> a37d912 (final image fix done)
           <div>
             <label style={lbl}>Project Title {req}</label>
             <input value={form.title} onChange={(e) => set("title", e.target.value)} placeholder="e.g. Komplett-Rückbau Bad" style={inp}
               onFocus={(e) => e.target.style.borderColor = C.stone} onBlur={(e) => e.target.style.borderColor = C.border} />
           </div>
 
+<<<<<<< HEAD
           {/* Location + Category */}
+=======
+>>>>>>> a37d912 (final image fix done)
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
             <div>
               <label style={lbl}>Location</label>
@@ -346,7 +386,10 @@ function ProjectDrawer({ project, onSave, onClose, toast }) {
             </div>
           </div>
 
+<<<<<<< HEAD
           {/* Description */}
+=======
+>>>>>>> a37d912 (final image fix done)
           <div>
             <label style={lbl}>Description {req}</label>
             <textarea value={form.description} onChange={(e) => set("description", e.target.value)} placeholder="Describe the project in detail…" rows={4}
@@ -354,7 +397,10 @@ function ProjectDrawer({ project, onSave, onClose, toast }) {
               onFocus={(e) => e.target.style.borderColor = C.stone} onBlur={(e) => e.target.style.borderColor = C.border} />
           </div>
 
+<<<<<<< HEAD
           {/* Published toggle */}
+=======
+>>>>>>> a37d912 (final image fix done)
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "14px 16px", background: C.hover, borderRadius: 10, border: `1px solid ${C.border}` }}>
             <div>
               <p style={{ fontSize: 14, fontWeight: 500, color: C.text, margin: "0 0 2px" }}>Publish to website</p>
@@ -365,7 +411,10 @@ function ProjectDrawer({ project, onSave, onClose, toast }) {
             </div>
           </div>
 
+<<<<<<< HEAD
           {/* Main Image */}
+=======
+>>>>>>> a37d912 (final image fix done)
           <div>
             <label style={lbl}>Main Image <span style={{ color: C.subtle, fontWeight: 400, textTransform: "none", letterSpacing: 0 }}>— shown on project card</span></label>
             <DropZone
@@ -377,7 +426,10 @@ function ProjectDrawer({ project, onSave, onClose, toast }) {
             />
           </div>
 
+<<<<<<< HEAD
           {/* Gallery */}
+=======
+>>>>>>> a37d912 (final image fix done)
           <div>
             <label style={lbl}>Gallery Images <span style={{ color: C.subtle, fontWeight: 400, textTransform: "none", letterSpacing: 0 }}>— multiple photos</span></label>
             <DropZone
@@ -390,9 +442,32 @@ function ProjectDrawer({ project, onSave, onClose, toast }) {
               onRemoveExisting={removeExistingGallery}
             />
           </div>
+<<<<<<< HEAD
         </div>
 
         {/* Footer */}
+=======
+
+          {/* ✅ NEW: YouTube Video URL */}
+          <div>
+            <label style={lbl}>YouTube Video <span style={{ color: C.subtle, fontWeight: 400, textTransform: "none", letterSpacing: 0 }}>— optional video for project</span></label>
+            <input
+              value={form.youtubeUrl}
+              onChange={(e) => set("youtubeUrl", e.target.value)}
+              placeholder="https://www.youtube.com/watch?v=..."
+              style={inp}
+              onFocus={(e) => e.target.style.borderColor = C.stone}
+              onBlur={(e) => e.target.style.borderColor = C.border}
+            />
+            {form.youtubeUrl && (
+              <p style={{ fontSize: 12, color: C.muted, marginTop: 6 }}>
+                ✅ Video will be shown in project modal
+              </p>
+            )}
+          </div>
+        </div>
+
+>>>>>>> a37d912 (final image fix done)
         <div style={{ padding: "18px 28px", borderTop: `1px solid ${C.border}`, display: "flex", gap: 12, flexShrink: 0, position: "sticky", bottom: 0, background: C.card }}>
           <button onClick={submit} disabled={saving} style={{ flex: 1, padding: "12px 0", background: C.stone, color: "#fff", border: "none", borderRadius: 10, fontFamily: ff, fontSize: 15, fontWeight: 600, cursor: saving ? "not-allowed" : "pointer", opacity: saving ? 0.8 : 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
             {saving ? <><Spinner /> Saving…</> : (project ? "Update Project" : "Create Project")}
@@ -432,12 +507,18 @@ function ProjectRow({ project, onEdit, onDelete }) {
   return (
     <div onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
       style={{ display: "grid", gridTemplateColumns: "64px 1fr auto", gap: 0, alignItems: "center", borderBottom: `1px solid ${C.border}`, background: hov ? C.hover : "transparent", transition: "background .15s", cursor: "default" }}>
+<<<<<<< HEAD
       {/* Thumb */}
+=======
+>>>>>>> a37d912 (final image fix done)
       <div style={{ width: 64, height: 56, background: C.hover, display: "flex", alignItems: "center", justifyContent: "center", color: C.subtle, flexShrink: 0, overflow: "hidden" }}>
         {imgSrc ? <img src={imgSrc} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} /> : Ic.image}
       </div>
 
+<<<<<<< HEAD
       {/* Info */}
+=======
+>>>>>>> a37d912 (final image fix done)
       <div style={{ padding: "14px 18px", minWidth: 0 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4, flexWrap: "wrap" }}>
           <span style={{ fontSize: 15, fontWeight: 500, color: C.white, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{project.title}</span>
@@ -450,7 +531,10 @@ function ProjectRow({ project, onEdit, onDelete }) {
         </div>
       </div>
 
+<<<<<<< HEAD
       {/* Actions */}
+=======
+>>>>>>> a37d912 (final image fix done)
       <div style={{ display: "flex", gap: 6, padding: "0 16px", flexShrink: 0, opacity: hov ? 1 : 0, transition: "opacity .15s" }}>
         <button onClick={() => onEdit(project)} title="Edit"
           style={{ width: 32, height: 32, borderRadius: 8, background: C.blueDim, border: `1px solid ${C.blue}33`, color: C.blue, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -483,13 +567,20 @@ export default function AdminPanel() {
   const [username, setUsername] = useState("");
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
+<<<<<<< HEAD
   const [drawer, setDrawer] = useState(null); // null | "create" | project object
+=======
+  const [drawer, setDrawer] = useState(null);
+>>>>>>> a37d912 (final image fix done)
   const [deleting, setDeleting] = useState(null);
   const [search, setSearch] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const { toasts, add: toast } = useToasts();
 
+<<<<<<< HEAD
   // Load fonts
+=======
+>>>>>>> a37d912 (final image fix done)
   useEffect(() => {
     const link = document.createElement("link");
     link.rel = "stylesheet";
@@ -497,6 +588,7 @@ export default function AdminPanel() {
     document.head.appendChild(link);
   }, []);
 
+<<<<<<< HEAD
   // Check token on mount — always verify with backend, clear bad tokens
   useEffect(() => {
     const token = getToken();
@@ -504,11 +596,17 @@ export default function AdminPanel() {
       setAuthChecked(true);
       return;
     }
+=======
+  useEffect(() => {
+    const token = getToken();
+    if (!token) { setAuthChecked(true); return; }
+>>>>>>> a37d912 (final image fix done)
     fetch(AUTH_API + "/verify", {
       method: "GET",
       headers: { "Authorization": "Bearer " + token, "Content-Type": "application/json" },
     })
       .then((r) => {
+<<<<<<< HEAD
         if (!r.ok) {
           // Server rejected token — force logout
           localStorage.removeItem("admin_token");
@@ -536,6 +634,20 @@ export default function AdminPanel() {
   useEffect(() => {
     if (authed) fetchProjects();
   }, [authed]);
+=======
+        if (!r.ok) { localStorage.removeItem("admin_token"); setAuthChecked(true); return null; }
+        return r.json();
+      })
+      .then((d) => {
+        if (d && d.valid) { setAuthed(true); setUsername(d.user?.username || "Admin"); }
+        else { localStorage.removeItem("admin_token"); }
+        setAuthChecked(true);
+      })
+      .catch(() => { localStorage.removeItem("admin_token"); setAuthChecked(true); });
+  }, []);
+
+  useEffect(() => { if (authed) fetchProjects(); }, [authed]);
+>>>>>>> a37d912 (final image fix done)
 
   const fetchProjects = async () => {
     setLoading(true);
@@ -585,15 +697,23 @@ export default function AdminPanel() {
 
   return (
     <div style={{ display: "flex", minHeight: "100vh", background: C.bg, fontFamily: ff, color: C.text }}>
+<<<<<<< HEAD
       {/* Sidebar */}
       <aside style={{ width: sidebarOpen ? 220 : 60, background: C.card, borderRight: `1px solid ${C.border}`, display: "flex", flexDirection: "column", transition: "width .25s ease", flexShrink: 0, overflow: "hidden" }}>
         {/* Logo */}
         <div style={{ height: 60, display: "flex", alignItems: "center", gap: 12, padding: sidebarOpen ? "0 18px" : "0 18px", borderBottom: `1px solid ${C.border}`, overflow: "hidden" }}>
+=======
+      <aside style={{ width: sidebarOpen ? 220 : 60, background: C.card, borderRight: `1px solid ${C.border}`, display: "flex", flexDirection: "column", transition: "width .25s ease", flexShrink: 0, overflow: "hidden" }}>
+        <div style={{ height: 60, display: "flex", alignItems: "center", gap: 12, padding: "0 18px", borderBottom: `1px solid ${C.border}`, overflow: "hidden" }}>
+>>>>>>> a37d912 (final image fix done)
           <div style={{ width: 28, height: 28, borderRadius: 8, background: C.stoneDim, display: "flex", alignItems: "center", justifyContent: "center", color: C.stone, flexShrink: 0 }}>{Ic.logo}</div>
           {sidebarOpen && <span style={{ fontFamily: fd, fontSize: 16, fontWeight: 500, color: C.white, whiteSpace: "nowrap" }}>Construction</span>}
         </div>
 
+<<<<<<< HEAD
         {/* Nav */}
+=======
+>>>>>>> a37d912 (final image fix done)
         <nav style={{ flex: 1, padding: "14px 8px" }}>
           <NavItem icon={Ic.projects} label="Projects" active sidebarOpen={sidebarOpen} />
           <NavItem icon={Ic.plus} label="Add Project" sidebarOpen={sidebarOpen} onClick={() => setDrawer("create")} />
@@ -603,7 +723,10 @@ export default function AdminPanel() {
           </a>
         </nav>
 
+<<<<<<< HEAD
         {/* Toggle + User */}
+=======
+>>>>>>> a37d912 (final image fix done)
         <div style={{ borderTop: `1px solid ${C.border}`, padding: "12px 8px" }}>
           <NavItem icon={Ic.menu} label="Collapse" sidebarOpen={sidebarOpen} onClick={() => setSidebarOpen((o) => !o)} />
           {sidebarOpen && (
@@ -616,9 +739,13 @@ export default function AdminPanel() {
         </div>
       </aside>
 
+<<<<<<< HEAD
       {/* Main */}
       <div style={{ flex: 1, display: "flex", flexDirection: "column", minWidth: 0, overflow: "hidden" }}>
         {/* Top bar */}
+=======
+      <div style={{ flex: 1, display: "flex", flexDirection: "column", minWidth: 0, overflow: "hidden" }}>
+>>>>>>> a37d912 (final image fix done)
         <header style={{ height: 60, background: C.card, borderBottom: `1px solid ${C.border}`, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 24px", flexShrink: 0 }}>
           <div>
             <h1 style={{ fontFamily: fd, fontSize: 19, fontWeight: 500, color: C.white, margin: 0 }}>Projects</h1>
@@ -629,9 +756,13 @@ export default function AdminPanel() {
           </button>
         </header>
 
+<<<<<<< HEAD
         {/* Content */}
         <main style={{ flex: 1, overflowY: "auto", padding: "24px" }}>
           {/* Stats */}
+=======
+        <main style={{ flex: 1, overflowY: "auto", padding: "24px" }}>
+>>>>>>> a37d912 (final image fix done)
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: 14, marginBottom: 24 }}>
             <StatCard label="Total Projects" value={projects.length} sub="All time" />
             <StatCard label="Published" value={published} sub="Visible on site" />
@@ -639,9 +770,13 @@ export default function AdminPanel() {
             <StatCard label="Total Photos" value={totalPhotos} sub="Across all projects" />
           </div>
 
+<<<<<<< HEAD
           {/* Search + Table */}
           <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 14, overflow: "hidden" }}>
             {/* Search bar */}
+=======
+          <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 14, overflow: "hidden" }}>
+>>>>>>> a37d912 (final image fix done)
             <div style={{ padding: "14px 18px", borderBottom: `1px solid ${C.border}`, display: "flex", alignItems: "center", gap: 10 }}>
               <span style={{ color: C.subtle, display: "flex" }}>{Ic.search}</span>
               <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search projects…"
@@ -649,7 +784,10 @@ export default function AdminPanel() {
               {search && <button onClick={() => setSearch("")} style={{ background: "none", border: "none", color: C.subtle, cursor: "pointer", display: "flex" }}>{Ic.x}</button>}
             </div>
 
+<<<<<<< HEAD
             {/* Table */}
+=======
+>>>>>>> a37d912 (final image fix done)
             {loading ? (
               <div style={{ padding: "60px 0", textAlign: "center", color: C.muted, display: "flex", flexDirection: "column", alignItems: "center", gap: 12 }}>
                 <Spinner /> <span style={{ fontSize: 14 }}>Loading projects…</span>
@@ -672,7 +810,10 @@ export default function AdminPanel() {
         </main>
       </div>
 
+<<<<<<< HEAD
       {/* Drawer */}
+=======
+>>>>>>> a37d912 (final image fix done)
       {drawer !== null && (
         <ProjectDrawer
           project={drawer === "create" ? null : drawer}
@@ -682,7 +823,10 @@ export default function AdminPanel() {
         />
       )}
 
+<<<<<<< HEAD
       {/* Delete modal */}
+=======
+>>>>>>> a37d912 (final image fix done)
       {deleting && <DeleteConfirm project={deleting} onConfirm={handleDeleteConfirm} onCancel={() => setDeleting(null)} />}
 
       <Toasts toasts={toasts} />

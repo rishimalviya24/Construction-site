@@ -1,6 +1,13 @@
+<<<<<<< HEAD
 const trimTrailingSlash = (value) => value.replace(/\/+$/, "");
 
 const envBaseUrl = import.meta.env.VITE_API_BASE_URL?.trim();
+=======
+// ✅ FIX: Standardized on VITE_API_URL (was using VITE_API_BASE_URL which didn't match .env)
+const trimTrailingSlash = (value) => value.replace(/\/+$/, "");
+
+const envBaseUrl = import.meta.env.VITE_API_URL?.trim();
+>>>>>>> a37d912 (final image fix done)
 
 export const API_BASE_URL = envBaseUrl
   ? trimTrailingSlash(envBaseUrl)

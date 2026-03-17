@@ -1,0 +1,23 @@
+# Dependencies
+node_modules/
+*/node_modules/
+
+# Environment variables - NEVER commit these
+backend/.env
+frontend/.env
+
+# Build outputs
+frontend/dist/
+frontend/build/
+
+# Uploads (local only - use cloud storage in production)
+backend/uploads/*
+!backend/uploads/.gitkeep
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*

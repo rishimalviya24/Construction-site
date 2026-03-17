@@ -8,8 +8,12 @@ router.post("/login", (req, res) => {
   const ADMIN_PASS = process.env.ADMIN_PASSWORD || "admin123";
   const SECRET = process.env.JWT_SECRET || "construction_secret_2024";
 
+<<<<<<< HEAD
   console.log("Login attempt:", username, "| Expected:", ADMIN_USER);
 
+=======
+  // ✅ FIX: Removed console.log that exposed credentials in logs
+>>>>>>> a37d912 (final image fix done)
   if (username !== ADMIN_USER || password !== ADMIN_PASS) {
     return res.status(401).json({ error: "Invalid credentials" });
   }

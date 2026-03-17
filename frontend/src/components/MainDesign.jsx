@@ -1,21 +1,153 @@
 import { useState, useEffect, useRef } from "react";
+<<<<<<< HEAD
+=======
+import BookingPage from "./booking/BookingPage";
+>>>>>>> a37d912 (final image fix done)
 
 /* ══════════════════════════════════════════
    ✏️  EDITABLE CONSTANTS — change here only
    ══════════════════════════════════════════ */
 const PH       = "+41 XX XXX XX XX";
 const WA_LINK  = "https://wa.me/41XXXXXXXXX?text=Guten%20Tag";
+<<<<<<< HEAD
 const REGION   = "Region Zürich"; // ← Yellow badge text (Image 1)
 
 // About teaser section (Image 2) — edit freely
+=======
+const REGION   = "Region Zürich";
+
+// ✅ FIX: API URL — reads from .env, falls back to localhost in dev
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+
+// ✅ NEW: Convert any YouTube URL format to embed URL
+function getYoutubeEmbed(url) {
+  if (!url || !url.trim()) return null;
+  const u = url.trim();
+
+  // https://www.youtube.com/watch?v=VIDEO_ID  (standard)
+  const watchMatch = u.match(/[?&]v=([^&]+)/);
+  if (watchMatch) return `https://www.youtube.com/embed/${watchMatch[1]}`;
+
+  // https://youtu.be/VIDEO_ID  (share link)
+  const shortShareMatch = u.match(/youtu\.be\/([^?&]+)/);
+  if (shortShareMatch) return `https://www.youtube.com/embed/${shortShareMatch[1]}`;
+
+  // ✅ FIX: https://youtube.com/shorts/VIDEO_ID  (Shorts)
+  // ✅ FIX: https://www.youtube.com/shorts/VIDEO_ID  (Shorts with www)
+  const shortsMatch = u.match(/youtube\.com\/shorts\/([^?&]+)/);
+  if (shortsMatch) return `https://www.youtube.com/embed/${shortsMatch[1]}`;
+
+  // Already an embed URL
+  if (u.includes("/embed/")) return u;
+
+  return null;
+}
+
+// ✅ NEW: Full-screen gallery modal component used in both slider and projects page
+function GalleryModal({ project, onClose }) {
+  const allImages = [
+    project.mainImageUrl ? `${API_URL}${project.mainImageUrl}` : null,
+    ...(project.imageUrls || []).map((u) => `${API_URL}${u}`),
+  ].filter(Boolean);
+
+  const [activeIdx, setActiveIdx] = useState(0);
+  const embedUrl = getYoutubeEmbed(project.youtubeUrl);
+
+  return (
+    <div onClick={onClose}
+      style={{ position: "fixed", inset: 0, zIndex: 10000, background: "rgba(0,0,0,0.75)", backdropFilter: "blur(10px)", display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }}>
+      <div onClick={(e) => e.stopPropagation()}
+        style={{ background: C.white, borderRadius: 24, maxWidth: 760, width: "100%", overflow: "hidden", maxHeight: "92vh", overflowY: "auto" }}>
+
+        {/* ── Main image / video viewer ── */}
+        {allImages.length > 0 && (
+          <div style={{ position: "relative", width: "100%", height: 380, background: C.bg, flexShrink: 0 }}>
+            <img
+              src={allImages[activeIdx]}
+              alt="Project"
+              style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+            />
+            {/* Prev / Next arrows if multiple images */}
+            {allImages.length > 1 && (
+              <>
+                <button onClick={() => setActiveIdx((i) => Math.max(0, i - 1))}
+                  disabled={activeIdx === 0}
+                  style={{ position: "absolute", left: 12, top: "50%", transform: "translateY(-50%)", width: 40, height: 40, borderRadius: "50%", background: "rgba(255,255,255,0.9)", border: "none", cursor: activeIdx === 0 ? "default" : "pointer", opacity: activeIdx === 0 ? 0.3 : 1, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  {I.chevL(C.dark)}
+                </button>
+                <button onClick={() => setActiveIdx((i) => Math.min(allImages.length - 1, i + 1))}
+                  disabled={activeIdx === allImages.length - 1}
+                  style={{ position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)", width: 40, height: 40, borderRadius: "50%", background: "rgba(255,255,255,0.9)", border: "none", cursor: activeIdx === allImages.length - 1 ? "default" : "pointer", opacity: activeIdx === allImages.length - 1 ? 0.3 : 1, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  {I.chevR(C.dark)}
+                </button>
+                {/* Image counter badge */}
+                <div style={{ position: "absolute", bottom: 12, right: 12, background: "rgba(0,0,0,0.55)", color: "#fff", fontFamily: ff, fontSize: 13, fontWeight: 600, borderRadius: 980, padding: "4px 12px" }}>
+                  {activeIdx + 1} / {allImages.length}
+                </div>
+              </>
+            )}
+          </div>
+        )}
+
+        {/* ── Thumbnail strip ── */}
+        {allImages.length > 1 && (
+          <div style={{ display: "flex", gap: 8, padding: "12px 16px", overflowX: "auto", background: C.bg, flexShrink: 0 }}>
+            {allImages.map((src, i) => (
+              <div key={i} onClick={() => setActiveIdx(i)}
+                style={{ flexShrink: 0, width: 72, height: 52, borderRadius: 8, overflow: "hidden", cursor: "pointer", border: `2.5px solid ${i === activeIdx ? C.stone : "transparent"}`, transition: "border-color 0.2s" }}>
+                <img src={src} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* ── Project info ── */}
+        <div style={{ padding: "28px 32px" }}>
+          <div style={{ fontFamily: ff, fontSize: 11, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.08em", color: C.stone, marginBottom: 10 }}>{project.category}</div>
+          <h2 style={{ fontFamily: fd, fontSize: 26, fontWeight: 500, color: C.black, marginBottom: 8, letterSpacing: "-0.02em" }}>{project.title}</h2>
+          {project.location && <p style={{ fontFamily: ff, fontSize: 15, color: C.stone, fontWeight: 500, marginBottom: 14 }}>{project.location}</p>}
+          {project.description && <p style={{ fontFamily: ff, fontSize: 15, color: C.dark, lineHeight: 1.75, marginBottom: embedUrl ? 24 : 20 }}>{project.description}</p>}
+
+          {/* ✅ NEW: YouTube video embed */}
+          {embedUrl && (
+            <div style={{ marginBottom: 20 }}>
+              <div style={{ fontFamily: ff, fontSize: 12, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.1em", color: C.muted, marginBottom: 12 }}>▶ Projektvideo</div>
+              <div style={{ position: "relative", width: "100%", paddingTop: "56.25%", borderRadius: 14, overflow: "hidden", background: C.bg }}>
+                <iframe
+                  src={embedUrl}
+                  title="Project Video"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", border: "none" }}
+                />
+              </div>
+            </div>
+          )}
+
+          <button onClick={onClose}
+            style={{ fontFamily: ff, fontSize: 14, fontWeight: 500, background: C.bg, color: C.dark, border: "none", borderRadius: 980, padding: "10px 24px", cursor: "pointer" }}>
+            Schliessen
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// About teaser section
+>>>>>>> a37d912 (final image fix done)
 const ABOUT_HEADING_LINE1 = "Klein, eingespielt";
 const ABOUT_HEADING_LINE2 = "und direkt vor Ort.";
 const ABOUT_P1 = "[Firmenname] ist ein junges Unternehmen aus der Region Zürich. Unser Team ist klein, dafür eingespielt.";
 const ABOUT_P2 = "Wir arbeiten mit Erfahrung, Handwerk und den richtigen Geräten. Das macht uns flexibel.";
 
 /* ══════════════════════════════════════════
+<<<<<<< HEAD
    🖼️  SERVICE PAGE IMAGES (Image 3)
    Replace Unsplash URLs with your own images
+=======
+   🖼️  SERVICE PAGE IMAGES
+>>>>>>> a37d912 (final image fix done)
    ══════════════════════════════════════════ */
 const SVC_IMAGES = {
   rueckbau:  "https://plus.unsplash.com/premium_photo-1682722002518-00da1587070e?w=900&auto=format&fit=crop&q=80",
@@ -24,9 +156,13 @@ const SVC_IMAGES = {
   transport: "https://images.unsplash.com/photo-1660477653365-da08afb76379?w=900&auto=format&fit=crop&q=80",
   sanitaer:  "https://media.istockphoto.com/id/1403002412/photo/sanitary-system-pipeline-in-construction-site-building.webp?a=1&b=1&s=612x612&w=0&k=20&c=kuu8DZDntxQNm_Czs2DFmJ0nhk_-ilbeIW0RCzyQ1ng=",
 };
+<<<<<<< HEAD
 // About page team photo
 const ABOUT_TEAM_IMG = "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=900&q=80";
 // Home page about-teaser photo
+=======
+const ABOUT_TEAM_IMG = "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=900&q=80";
+>>>>>>> a37d912 (final image fix done)
 const HOME_ABOUT_IMG = "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=900&q=80";
 /* ══════════════════════════════════════════ */
 
@@ -38,7 +174,11 @@ const C = {
 
 const ff  = "'DM Sans', -apple-system, sans-serif";
 const fd  = "'Playfair Display', Georgia, serif";
+<<<<<<< HEAD
 const fh  = "'Montserrat', -apple-system, sans-serif"; // ← Hero H1 font (Image 1 green)
+=======
+const fh  = "'Montserrat', -apple-system, sans-serif";
+>>>>>>> a37d912 (final image fix done)
 
 const I = {
   hammer:   (c) => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M15 12l-8.5 8.5c-.83.83-2.17.83-3 0a2.12 2.12 0 0 1 0-3L12 9"/><path d="M17.64 15L22 10.64"/><path d="M20.91 11.7l-1.25-1.25c-.6-.6-.93-1.4-.93-2.25v-.86L16.01 4.6a5.56 5.56 0 0 0-3.94-1.64H9l.92.82A6.18 6.18 0 0 1 12 8.4v1.56l2 2h2.47l2.26 1.91"/></svg>,
@@ -64,6 +204,10 @@ const I = {
   eye:      (c) => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.2" strokeLinecap="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>,
   send:     (c) => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>,
   expand:   (c) => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.5" strokeLinecap="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>,
+<<<<<<< HEAD
+=======
+  spinner:  (c) => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="2.5" strokeLinecap="round" style={{ animation: "spin .7s linear infinite" }}><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>,
+>>>>>>> a37d912 (final image fix done)
 };
 
 const SVC = [
@@ -74,6 +218,7 @@ const SVC = [
   { id: "sanitaer",  title: "Einbringung Sanitäranlagen", sub: "300 kg. Schmales Treppenhaus. Kein Problem.",       icon: "wrench",  heroSub: "Wenn 300 Kilo durch das Treppenhaus müssen",         desc: "Neue Boiler, Wärmepumpen oder Warmwasserspeicher wiegen mehrere hundert Kilo – und müssen dorthin, wo es am engsten ist.", p: ["Sicher an den Zielort – ohne Schäden. Mit Erfahrung und dem richtigen Equipment.", "EFH, MFH oder Gewerbebau. Altes Gerät raus? Erledigen wir gleich mit."], items: ["Vorab-Besichtigung & Ausmessung", "Einbringung mit Spezialequipment", "Sicherer Transport an den Zielort", "Demontage & Entsorgung Altgerät"] },
 ];
 
+<<<<<<< HEAD
 const PROJ = [
   { title: "Komplett-Rückbau Bad",      loc: "EFH, Zürich-Höngg",       cat: "Rückbau",   desc: "Demontage Sanitäranlagen, Platten, fachgerechte Entsorgung inkl. Recycling." },
   { title: "Einbringung Speicher 300 kg",loc: "MFH, Winterthur",          cat: "Sanitär",   desc: "300-kg-Warmwasserspeicher ins 2. UG, schmales Treppenhaus. Entsorgung Altgerät." },
@@ -86,15 +231,24 @@ const PROJ = [
 const icon = (n, c) => I[n] ? I[n](c) : null;
 
 /* ── Img component — shows real photo if src provided, else placeholder ── */
+=======
+const icon = (n, c) => I[n] ? I[n](c) : null;
+
+/* ── Img component ── */
+>>>>>>> a37d912 (final image fix done)
 function Img({ label = "Bild einfügen", h = 320, r = 16, src = "" }) {
   if (src) {
     return (
       <div style={{ width: "100%", height: h, borderRadius: r, overflow: "hidden", flexShrink: 0 }}>
+<<<<<<< HEAD
         <img
           src={src}
           alt={label}
           style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
         />
+=======
+        <img src={src} alt={label} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+>>>>>>> a37d912 (final image fix done)
       </div>
     );
   }
@@ -130,9 +284,15 @@ function Nav({ page, go }) {
     window.addEventListener("scroll", fn);
     return () => window.removeEventListener("scroll", fn);
   }, []);
+<<<<<<< HEAD
   const nav    = (p) => { go(p); setMob(false); setDd(false); };
   const isSvc  = SVC.some((s) => s.id === page);
   const lk     = (a) => ({ fontFamily: ff, fontSize: 13, fontWeight: a ? 600 : 400, color: a ? C.black : C.gray, cursor: "pointer" });
+=======
+  const nav   = (p) => { go(p); setMob(false); setDd(false); };
+  const isSvc = SVC.some((s) => s.id === page);
+  const lk    = (a) => ({ fontFamily: ff, fontSize: 13, fontWeight: a ? 600 : 400, color: a ? C.black : C.gray, cursor: "pointer" });
+>>>>>>> a37d912 (final image fix done)
 
   return (
     <>
@@ -159,6 +319,13 @@ function Nav({ page, go }) {
             </div>
             <span onClick={() => nav("projekte")} style={lk(page === "projekte")}>Projekte</span>
             <span onClick={() => nav("kontakt")}  style={lk(page === "kontakt")}>Kontakt</span>
+<<<<<<< HEAD
+=======
+            <button onClick={() => nav("booking")} style={{ fontFamily: ff, fontSize: 13, fontWeight: 500, background: C.stone, color: C.white, border: "none", borderRadius: 980, padding: "9px 18px", cursor: "pointer", display: "flex", alignItems: "center", gap: 6 }}>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              Termin buchen
+            </button>
+>>>>>>> a37d912 (final image fix done)
             <button onClick={() => nav("kontakt")} style={{ fontFamily: ff, fontSize: 13, fontWeight: 500, background: C.black, color: C.white, border: "none", borderRadius: 980, padding: "9px 20px", cursor: "pointer" }}>Offerte anfragen</button>
           </div>
           <div className="mN" style={{ display: "none", cursor: "pointer" }} onClick={() => setMob(!mob)}>{I.menu}</div>
@@ -248,8 +415,16 @@ function CTA({ go }) {
   );
 }
 
+<<<<<<< HEAD
 /* ── Project Slider with Modal ── */
 function ProjectSlider({ go }) {
+=======
+/* ══════════════════════════════════════════
+   ✅ FIX: ProjectSlider now accepts dynamic
+   projects from API instead of static PROJ
+   ══════════════════════════════════════════ */
+function ProjectSlider({ go, projects = [] }) {
+>>>>>>> a37d912 (final image fix done)
   const [idx, setIdx]           = useState(0);
   const [modal, setModal]       = useState(null);
   const [visCount, setVisCount] = useState(3);
@@ -269,6 +444,7 @@ function ProjectSlider({ go }) {
     return () => window.removeEventListener("resize", recalc);
   }, []);
 
+<<<<<<< HEAD
   const maxIdx    = Math.max(0, PROJ.length - visCount);
   const prev      = () => setIdx((i) => Math.max(0, i - 1));
   const next      = () => setIdx((i) => Math.min(maxIdx, i + 1));
@@ -298,22 +474,71 @@ function ProjectSlider({ go }) {
                   <div style={{ fontFamily: ff, fontSize: 11, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.08em", color: C.stone, marginBottom: 8 }}>{p.cat}</div>
                   <h3 style={{ fontFamily: fd, fontSize: 18, fontWeight: 500, color: C.black, marginBottom: 6, letterSpacing: "-0.01em" }}>{p.title}</h3>
                   <p style={{ fontFamily: ff, fontSize: 13, color: C.gray, margin: 0 }}>{p.loc}</p>
+=======
+  // Reset index when projects change
+  useEffect(() => { setIdx(0); }, [projects.length]);
+
+  const maxIdx     = Math.max(0, projects.length - visCount);
+  const prev       = () => setIdx((i) => Math.max(0, i - 1));
+  const next       = () => setIdx((i) => Math.min(maxIdx, i + 1));
+  const translateX = idx * (cardW + GAP);
+
+  // ✅ Empty state
+  if (projects.length === 0) {
+    return (
+      <div style={{ background: C.bg, borderRadius: 20, padding: "60px 24px", textAlign: "center" }}>
+        {I.eye(C.muted)}
+        <p style={{ fontFamily: ff, fontSize: 15, color: C.muted, marginTop: 12 }}>Noch keine Projekte vorhanden.</p>
+      </div>
+    );
+  }
+
+  return (
+    <>
+      <div style={{ position: "relative" }}>
+        <div ref={maskRef} style={{ overflow: "hidden", borderRadius: 20, width: "100%" }}>
+          <div style={{ display: "flex", gap: GAP, transition: "transform 0.5s cubic-bezier(.4,0,.2,1)", transform: `translateX(-${translateX}px)`, willChange: "transform" }}>
+            {/* ✅ FIX: uses projects prop, correct field names */}
+            {projects.map((p, i) => (
+              <div key={p._id || i}
+                style={{ width: cardW || "100%", minWidth: cardW || "100%", flexShrink: 0, borderRadius: 20, overflow: "hidden", background: C.bg, cursor: "pointer" }}
+                onClick={() => setModal(p)}>
+                <div style={{ position: "relative" }}>
+                  {/* ✅ FIX: Shows real uploaded image from backend */}
+                  <Img label="Projektfoto" h={200} r={0} src={p.mainImageUrl ? `${API_URL}${p.mainImageUrl}` : ""} />
+                  <div style={{ position: "absolute", top: 12, right: 12, width: 32, height: 32, borderRadius: 8, background: "rgba(255,255,255,0.85)", backdropFilter: "blur(8px)", display: "flex", alignItems: "center", justifyContent: "center" }}>{I.expand(C.dark)}</div>
+                </div>
+                <div style={{ padding: "20px 22px 24px" }}>
+                  {/* ✅ FIX: p.category instead of p.cat */}
+                  <div style={{ fontFamily: ff, fontSize: 11, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.08em", color: C.stone, marginBottom: 8 }}>{p.category}</div>
+                  <h3 style={{ fontFamily: fd, fontSize: 18, fontWeight: 500, color: C.black, marginBottom: 6, letterSpacing: "-0.01em" }}>{p.title}</h3>
+                  {/* ✅ FIX: p.location instead of p.loc */}
+                  <p style={{ fontFamily: ff, fontSize: 13, color: C.gray, margin: 0 }}>{p.location}</p>
+>>>>>>> a37d912 (final image fix done)
                 </div>
               </div>
             ))}
           </div>
         </div>
 
+<<<<<<< HEAD
         {/* Controls */}
         <div style={{ display: "flex", gap: 8, marginTop: 32, justifyContent: "center", alignItems: "center" }}>
           <button onClick={prev} disabled={idx === 0} style={{ width: 44, height: 44, borderRadius: 22, border: "1.5px solid " + (idx === 0 ? C.line : C.dark), background: "none", cursor: idx === 0 ? "default" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", opacity: idx === 0 ? 0.3 : 1, transition: "opacity 0.2s" }}>{I.chevL(C.dark)}</button>
           <div style={{ display: "flex", gap: 6, margin: "0 12px" }}>
             {PROJ.map((_, i) => <div key={i} style={{ width: i === idx ? 20 : 6, height: 6, borderRadius: 3, background: i === idx ? C.stone : C.line, transition: "all 0.3s" }} />)}
+=======
+        <div style={{ display: "flex", gap: 8, marginTop: 32, justifyContent: "center", alignItems: "center" }}>
+          <button onClick={prev} disabled={idx === 0} style={{ width: 44, height: 44, borderRadius: 22, border: "1.5px solid " + (idx === 0 ? C.line : C.dark), background: "none", cursor: idx === 0 ? "default" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", opacity: idx === 0 ? 0.3 : 1, transition: "opacity 0.2s" }}>{I.chevL(C.dark)}</button>
+          <div style={{ display: "flex", gap: 6, margin: "0 12px" }}>
+            {projects.map((_, i) => <div key={i} style={{ width: i === idx ? 20 : 6, height: 6, borderRadius: 3, background: i === idx ? C.stone : C.line, transition: "all 0.3s" }} />)}
+>>>>>>> a37d912 (final image fix done)
           </div>
           <button onClick={next} disabled={idx >= maxIdx} style={{ width: 44, height: 44, borderRadius: 22, border: "1.5px solid " + (idx >= maxIdx ? C.line : C.dark), background: "none", cursor: idx >= maxIdx ? "default" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", opacity: idx >= maxIdx ? 0.3 : 1, transition: "opacity 0.2s" }}>{I.chevR(C.dark)}</button>
         </div>
       </div>
 
+<<<<<<< HEAD
       {modal && (
         <div onClick={() => setModal(null)} style={{ position: "fixed", inset: 0, zIndex: 10000, background: "rgba(0,0,0,0.6)", backdropFilter: "blur(8px)", display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }}>
           <div onClick={(e) => e.stopPropagation()} style={{ background: C.white, borderRadius: 24, maxWidth: 640, width: "100%", overflow: "hidden" }}>
@@ -328,12 +553,20 @@ function ProjectSlider({ go }) {
           </div>
         </div>
       )}
+=======
+      {/* ✅ FIX: Full gallery modal with thumbnail strip + YouTube */}
+      {modal && <GalleryModal project={modal} onClose={() => setModal(null)} />}
+>>>>>>> a37d912 (final image fix done)
     </>
   );
 }
 
 /* ══ HOME ══ */
+<<<<<<< HEAD
 function Home({ go }) {
+=======
+function Home({ go, projects, projectsLoading }) {
+>>>>>>> a37d912 (final image fix done)
   return (
     <div>
       {/* Hero */}
@@ -341,12 +574,18 @@ function Home({ go }) {
         <div style={{ position: "absolute", top: "10%", right: "-5%", width: 600, height: 600, borderRadius: "50%", background: "radial-gradient(circle, " + C.stonePale + " 0%, transparent 70%)", pointerEvents: "none" }} />
         <div style={{ maxWidth: 1080, margin: "0 auto", width: "100%", position: "relative", zIndex: 1 }}>
           <div style={{ maxWidth: 720 }}>
+<<<<<<< HEAD
             {/* Yellow badge — edit REGION constant at top of file */}
+=======
+>>>>>>> a37d912 (final image fix done)
             <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: C.bg, borderRadius: 980, padding: "7px 16px 7px 10px", marginBottom: 40 }}>
               <div style={{ width: 7, height: 7, borderRadius: "50%", background: C.stone }} />
               <span style={{ fontFamily: ff, fontSize: 13, fontWeight: 500, color: C.gray }}>{REGION}</span>
             </div>
+<<<<<<< HEAD
             {/* H1 — now uses Montserrat (fh) */}
+=======
+>>>>>>> a37d912 (final image fix done)
             <h1 style={{ fontFamily: fh, fontSize: "clamp(40px,7vw,78px)", fontWeight: 900, color: C.black, lineHeight: 1.05, letterSpacing: "-0.03em", margin: "0 0 32px" }}>
               Rückbau,<br />Recycling &<br /><span style={{ color: C.stone }}>Entsorgung.</span>
             </h1>
@@ -356,6 +595,13 @@ function Home({ go }) {
             <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
               <button onClick={() => go("kontakt")} style={{ fontFamily: ff, fontSize: 16, fontWeight: 500, background: C.black, color: C.white, border: "none", borderRadius: 980, padding: "16px 36px", cursor: "pointer", display: "flex", alignItems: "center", gap: 10 }}>Kostenlose Offerte {I.arrowR("#fff", 17)}</button>
               <a href={WA_LINK} target="_blank" rel="noopener noreferrer" style={{ fontFamily: ff, fontSize: 16, fontWeight: 500, color: C.black, border: "1.5px solid " + C.line, borderRadius: 980, padding: "15px 32px", textDecoration: "none", display: "flex", alignItems: "center", gap: 10 }}>{I.msg(C.black)} WhatsApp</a>
+<<<<<<< HEAD
+=======
+              <button onClick={() => go("booking")} style={{ fontFamily: ff, fontSize: 16, fontWeight: 500, background: C.stone, color: C.white, border: "none", borderRadius: 980, padding: "16px 36px", cursor: "pointer", display: "flex", alignItems: "center", gap: 10 }}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                Termin buchen
+              </button>
+>>>>>>> a37d912 (final image fix done)
             </div>
           </div>
         </div>
@@ -393,7 +639,11 @@ function Home({ go }) {
         </div>
       </W>
 
+<<<<<<< HEAD
       {/* About teaser — text edited via constants at top */}
+=======
+      {/* About teaser */}
+>>>>>>> a37d912 (final image fix done)
       <W bg={C.bg} py={100}>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 48, alignItems: "center" }}>
           <Img label="Team- oder Arbeitsfoto" h={460} r={20} src={HOME_ABOUT_IMG} />
@@ -409,13 +659,27 @@ function Home({ go }) {
         </div>
       </W>
 
+<<<<<<< HEAD
       {/* Projects slider */}
+=======
+      {/* ✅ FIX: Projects slider now shows real API projects */}
+>>>>>>> a37d912 (final image fix done)
       <W bg={C.white} py={100}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: 20, marginBottom: 48 }}>
           <div><Lab>Projekte</Lab><h2 style={{ fontFamily: fd, fontSize: "clamp(26px,3.5vw,40px)", fontWeight: 400, color: C.black, letterSpacing: "-0.03em", margin: 0 }}>Bisherige Arbeiten</h2></div>
           <span onClick={() => go("projekte")} style={{ fontFamily: ff, fontSize: 14, fontWeight: 500, color: C.black, cursor: "pointer", display: "flex", alignItems: "center", gap: 6, borderBottom: "1.5px solid " + C.black, paddingBottom: 3 }}>Alle ansehen {I.arrowR(C.black, 14)}</span>
         </div>
+<<<<<<< HEAD
         <ProjectSlider go={go} />
+=======
+        {projectsLoading ? (
+          <div style={{ display: "flex", justifyContent: "center", padding: "60px 0", color: C.muted, gap: 10, fontFamily: ff }}>
+            {I.spinner(C.stone)} Projekte werden geladen…
+          </div>
+        ) : (
+          <ProjectSlider go={go} projects={projects} />
+        )}
+>>>>>>> a37d912 (final image fix done)
       </W>
 
       {/* Process timeline */}
@@ -483,7 +747,11 @@ function ServicePage({ s, go }) {
   const others = SVC.filter((x) => x.id !== s.id);
   return (
     <div>
+<<<<<<< HEAD
       <W bg={C.white} py={160} sx={{ paddingBottom: 80 }}>
+=======
+      <W bg={C.white} py={120} sx={{ paddingTop: "clamp(72px,10vw,160px)", paddingBottom: "clamp(32px,5vw,80px)" }}>
+>>>>>>> a37d912 (final image fix done)
         <div style={{ maxWidth: 640 }}>
           <div style={{ display: "inline-flex", alignItems: "center", gap: 10, marginBottom: 24 }}>
             <div style={{ width: 40, height: 40, borderRadius: 12, background: C.stonePale, display: "flex", alignItems: "center", justifyContent: "center" }}>{icon(s.icon, C.stone)}</div>
@@ -495,7 +763,10 @@ function ServicePage({ s, go }) {
       </W>
       <W bg={C.white} py={0} sx={{ paddingBottom: 100 }}>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 48, alignItems: "start" }}>
+<<<<<<< HEAD
           {/* Real construction image from SVC_IMAGES */}
+=======
+>>>>>>> a37d912 (final image fix done)
           <Img label={"Foto: " + s.title} h={400} r={20} src={SVC_IMAGES[s.id] || ""} />
           <div>
             <p style={{ fontFamily: ff, fontSize: 17, color: C.dark, lineHeight: 1.85, marginBottom: 24 }}>{s.desc}</p>
@@ -542,12 +813,27 @@ function ServicePage({ s, go }) {
   );
 }
 
+<<<<<<< HEAD
 /* ══ PROJECTS ══ */
 function Projects({ go }) {
   const [f, setF]         = useState("Alle");
   const [modal, setModal] = useState(null);
   const cats = ["Alle", ...Array.from(new Set(PROJ.map((p) => p.cat)))];
   const list = f === "Alle" ? PROJ : PROJ.filter((p) => p.cat === f);
+=======
+/* ══════════════════════════════════════════
+   ✅ FIX: Projects page now shows real API
+   projects with correct field names
+   ══════════════════════════════════════════ */
+function Projects({ go, projects = [], projectsLoading }) {
+  const [f, setF]         = useState("Alle");
+  const [modal, setModal] = useState(null);
+
+  // ✅ FIX: Uses p.category (from API) instead of p.cat (static)
+  const cats = ["Alle", ...Array.from(new Set(projects.map((p) => p.category).filter(Boolean)))];
+  const list = f === "Alle" ? projects : projects.filter((p) => p.category === f);
+
+>>>>>>> a37d912 (final image fix done)
   return (
     <div>
       <W bg={C.white} py={160} sx={{ paddingBottom: 80 }}>
@@ -558,6 +844,7 @@ function Projects({ go }) {
         </div>
       </W>
       <W bg={C.white} py={0} sx={{ paddingBottom: 100 }}>
+<<<<<<< HEAD
         <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 40 }}>
           {cats.map((c) => (
             <button key={c} onClick={() => setF(c)} style={{ fontFamily: ff, fontSize: 13, fontWeight: 500, border: "none", borderRadius: 980, padding: "9px 20px", cursor: "pointer", background: f === c ? C.black : "transparent", color: f === c ? C.white : C.gray, outline: f === c ? "none" : "1.5px solid " + C.line }}>{c}</button>
@@ -599,13 +886,107 @@ function Projects({ go }) {
           </div>
         </div>
       )}
+=======
+        {projectsLoading ? (
+          <div style={{ display: "flex", justifyContent: "center", padding: "60px 0", color: C.muted, gap: 10, fontFamily: ff }}>
+            {I.spinner(C.stone)} Projekte werden geladen…
+          </div>
+        ) : (
+          <>
+            <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 40 }}>
+              {cats.map((c) => (
+                <button key={c} onClick={() => setF(c)} style={{ fontFamily: ff, fontSize: 13, fontWeight: 500, border: "none", borderRadius: 980, padding: "9px 20px", cursor: "pointer", background: f === c ? C.black : "transparent", color: f === c ? C.white : C.gray, outline: f === c ? "none" : "1.5px solid " + C.line }}>{c}</button>
+              ))}
+            </div>
+
+            {list.length === 0 ? (
+              <div style={{ textAlign: "center", padding: "80px 0", color: C.muted, fontFamily: ff }}>
+                <p style={{ fontSize: 16 }}>Noch keine Projekte vorhanden.</p>
+                <p style={{ fontSize: 14, marginTop: 8 }}>Projekte können im Admin-Panel hinzugefügt werden.</p>
+              </div>
+            ) : (
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 20 }}>
+                {list.map((p, i) => (
+                  <div key={p._id || i} onClick={() => setModal(p)}
+                    style={{ borderRadius: 20, overflow: "hidden", background: C.bg, cursor: "pointer", transition: "transform 0.25s" }}
+                    onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-4px)"; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.transform = "translateY(0)"; }}>
+                    <div style={{ position: "relative" }}>
+                      {/* ✅ FIX: shows real uploaded image */}
+                      <Img label="Projektfoto" h={260} r={0} src={p.mainImageUrl ? `${API_URL}${p.mainImageUrl}` : ""} />
+                      <div style={{ position: "absolute", top: 12, right: 12, width: 32, height: 32, borderRadius: 8, background: "rgba(255,255,255,0.85)", backdropFilter: "blur(8px)", display: "flex", alignItems: "center", justifyContent: "center" }}>{I.expand(C.dark)}</div>
+                    </div>
+                    <div style={{ padding: "28px 28px 32px" }}>
+                      <div style={{ display: "flex", gap: 10, marginBottom: 14, flexWrap: "wrap" }}>
+                        {/* ✅ FIX: p.category */}
+                        <span style={{ fontFamily: ff, fontSize: 11, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.08em", color: C.stone, background: C.stonePale, padding: "5px 14px", borderRadius: 980 }}>{p.category}</span>
+                      </div>
+                      <h3 style={{ fontFamily: fd, fontSize: 20, fontWeight: 500, color: C.black, marginBottom: 8 }}>{p.title}</h3>
+                      {/* ✅ FIX: p.location */}
+                      <p style={{ fontFamily: ff, fontSize: 14, color: C.stone, fontWeight: 500, marginBottom: 12 }}>{p.location}</p>
+                      {/* ✅ FIX: p.description */}
+                      <p style={{ fontFamily: ff, fontSize: 14, color: C.gray, lineHeight: 1.7, margin: 0 }}>{p.description}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </>
+        )}
+      </W>
+
+      {/* ✅ FIX: Full gallery modal with thumbnail strip + YouTube */}
+      {modal && <GalleryModal project={modal} onClose={() => setModal(null)} />}
+>>>>>>> a37d912 (final image fix done)
       <CTA go={go} />
     </div>
   );
 }
 
+<<<<<<< HEAD
 /* ══ CONTACT ══ */
 function Contact() {
+=======
+/* ══════════════════════════════════════════
+   ✅ FIX: Contact form is now fully wired —
+   controlled inputs + API submission
+   ══════════════════════════════════════════ */
+function Contact() {
+  const [form, setForm] = useState({ name: "", phone: "", email: "", service: "", message: "" });
+  const [status, setStatus] = useState(null); // null | "loading" | "success" | "error"
+  const [errMsg, setErrMsg] = useState("");
+
+  const set = (k, v) => setForm((f) => ({ ...f, [k]: v }));
+
+  const handleSubmit = async () => {
+    if (!form.name.trim() || !form.email.trim()) {
+      setErrMsg("Bitte Name und E-Mail eingeben.");
+      setStatus("error");
+      return;
+    }
+    setStatus("loading");
+    setErrMsg("");
+    try {
+      const res = await fetch(`${API_URL}/api/contact`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Fehler beim Senden.");
+      setStatus("success");
+      setForm({ name: "", phone: "", email: "", service: "", message: "" });
+    } catch (err) {
+      setErrMsg(err.message);
+      setStatus("error");
+    }
+  };
+
+  const inp = { width: "100%", padding: "14px 18px", borderRadius: 14, border: "1.5px solid " + C.line, fontSize: 15, fontFamily: ff, background: C.white, outline: "none", boxSizing: "border-box", color: C.dark, transition: "border-color 0.2s, box-shadow 0.2s" };
+  const onFocus = (e) => { e.currentTarget.style.borderColor = C.stone; e.currentTarget.style.boxShadow = "0 0 0 3px " + C.stonePale; };
+  const onBlur  = (e) => { e.currentTarget.style.borderColor = C.line; e.currentTarget.style.boxShadow = "none"; };
+
+>>>>>>> a37d912 (final image fix done)
   return (
     <div>
       <W bg={C.white} py={160} sx={{ paddingBottom: 80 }}>
@@ -617,6 +998,10 @@ function Contact() {
       </W>
       <W bg={C.white} py={0} sx={{ paddingBottom: 100 }}>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 48 }}>
+<<<<<<< HEAD
+=======
+          {/* Contact info */}
+>>>>>>> a37d912 (final image fix done)
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
             {[["phone","Telefon",PH,"tel:"+PH.replace(/\s/g,"")],["mail","E-Mail","info@firmenname.ch","mailto:info@firmenname.ch"],["msg","WhatsApp","Direkt schreiben",WA_LINK]].map(([ic, label, val, href]) => (
               <a key={label} href={href} target={label === "WhatsApp" ? "_blank" : undefined} rel={label === "WhatsApp" ? "noopener noreferrer" : undefined}
@@ -635,6 +1020,7 @@ function Contact() {
               <p style={{ fontFamily: ff, fontSize: 14, color: C.dark, lineHeight: 1.7, margin: 0 }}>Stadt Zürich, Winterthur, Limmattal, Glattal, Zürcher Ober- und Unterland.</p>
             </div>
           </div>
+<<<<<<< HEAD
           <div style={{ background: C.bg, borderRadius: 24, padding: "clamp(24px,4vw,40px)" }}>
             <h3 style={{ fontFamily: fd, fontSize: 24, fontWeight: 400, color: C.black, letterSpacing: "-0.02em", marginBottom: 8 }}>Offerte anfragen</h3>
             <p style={{ fontFamily: ff, fontSize: 14, color: C.gray, marginBottom: 32 }}>Kostenlos und unverbindlich. Antwort innert 24 Stunden.</p>
@@ -645,11 +1031,44 @@ function Contact() {
                   <input type={type} placeholder={ph} style={{ width: "100%", padding: "14px 18px", borderRadius: 14, border: "1.5px solid " + C.line, fontSize: 15, fontFamily: ff, background: C.white, outline: "none", boxSizing: "border-box" }}
                     onFocus={(e) => { e.currentTarget.style.borderColor = C.stone; e.currentTarget.style.boxShadow = "0 0 0 3px " + C.stonePale; }}
                     onBlur={(e)  => { e.currentTarget.style.borderColor = C.line; e.currentTarget.style.boxShadow = "none"; }} />
+=======
+
+          {/* ✅ FIX: Fully controlled form with real API submission */}
+          <div style={{ background: C.bg, borderRadius: 24, padding: "clamp(24px,4vw,40px)" }}>
+            <h3 style={{ fontFamily: fd, fontSize: 24, fontWeight: 400, color: C.black, letterSpacing: "-0.02em", marginBottom: 8 }}>Offerte anfragen</h3>
+            <p style={{ fontFamily: ff, fontSize: 14, color: C.gray, marginBottom: 32 }}>Kostenlos und unverbindlich. Antwort innert 24 Stunden.</p>
+
+            {/* ✅ Success message */}
+            {status === "success" && (
+              <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "16px 20px", background: "#f0fdf4", border: "1.5px solid #86efac", borderRadius: 14, marginBottom: 24, fontFamily: ff }}>
+                {I.check("#16a34a")}
+                <span style={{ fontSize: 15, color: "#15803d", fontWeight: 500 }}>Nachricht gesendet! Wir melden uns bald.</span>
+              </div>
+            )}
+
+            {/* ✅ Error message */}
+            {status === "error" && errMsg && (
+              <div style={{ padding: "14px 18px", background: "#fef2f2", border: "1.5px solid #fca5a5", borderRadius: 14, marginBottom: 24, fontFamily: ff, fontSize: 14, color: "#dc2626" }}>
+                {errMsg}
+              </div>
+            )}
+
+            <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+              {/* ✅ Controlled inputs */}
+              {[["Name","text","Ihr Name","name"],["Telefon","tel","+41 XX XXX XX XX","phone"],["E-Mail","email","name@beispiel.ch","email"]].map(([label, type, ph, key]) => (
+                <div key={key}>
+                  <label style={{ fontFamily: ff, fontSize: 12, fontWeight: 600, color: C.dark, marginBottom: 7, display: "block" }}>{label}</label>
+                  <input type={type} placeholder={ph} value={form[key]} onChange={(e) => set(key, e.target.value)} style={inp} onFocus={onFocus} onBlur={onBlur} />
+>>>>>>> a37d912 (final image fix done)
                 </div>
               ))}
               <div>
                 <label style={{ fontFamily: ff, fontSize: 12, fontWeight: 600, color: C.dark, marginBottom: 7, display: "block" }}>Dienstleistung</label>
+<<<<<<< HEAD
                 <select style={{ width: "100%", padding: "14px 18px", borderRadius: 14, border: "1.5px solid " + C.line, fontSize: 15, fontFamily: ff, background: C.white, outline: "none", boxSizing: "border-box", color: C.dark }}>
+=======
+                <select value={form.service} onChange={(e) => set("service", e.target.value)} style={{ ...inp, cursor: "pointer" }} onFocus={onFocus} onBlur={onBlur}>
+>>>>>>> a37d912 (final image fix done)
                   <option value="">Bitte wählen...</option>
                   {SVC.map((s) => <option key={s.id} value={s.id}>{s.title}</option>)}
                   <option value="andere">Anderes</option>
@@ -657,11 +1076,22 @@ function Contact() {
               </div>
               <div>
                 <label style={{ fontFamily: ff, fontSize: 12, fontWeight: 600, color: C.dark, marginBottom: 7, display: "block" }}>Nachricht</label>
+<<<<<<< HEAD
                 <textarea rows={4} placeholder="Beschreiben Sie kurz Ihr Projekt..." style={{ width: "100%", padding: "14px 18px", borderRadius: 14, border: "1.5px solid " + C.line, fontSize: 15, fontFamily: ff, background: C.white, outline: "none", boxSizing: "border-box", resize: "vertical" }}
                   onFocus={(e) => { e.currentTarget.style.borderColor = C.stone; e.currentTarget.style.boxShadow = "0 0 0 3px " + C.stonePale; }}
                   onBlur={(e)  => { e.currentTarget.style.borderColor = C.line; e.currentTarget.style.boxShadow = "none"; }} />
               </div>
               <button style={{ fontFamily: ff, fontSize: 16, fontWeight: 500, background: C.black, color: C.white, border: "none", borderRadius: 14, padding: "16px 28px", cursor: "pointer", marginTop: 4, display: "flex", alignItems: "center", justifyContent: "center", gap: 10 }}>Offerte absenden {I.arrowR("#fff")}</button>
+=======
+                <textarea rows={4} placeholder="Beschreiben Sie kurz Ihr Projekt..." value={form.message} onChange={(e) => set("message", e.target.value)} style={{ ...inp, resize: "vertical" }} onFocus={onFocus} onBlur={onBlur} />
+              </div>
+              <button
+                onClick={handleSubmit}
+                disabled={status === "loading"}
+                style={{ fontFamily: ff, fontSize: 16, fontWeight: 500, background: status === "loading" ? C.muted : C.black, color: C.white, border: "none", borderRadius: 14, padding: "16px 28px", cursor: status === "loading" ? "not-allowed" : "pointer", marginTop: 4, display: "flex", alignItems: "center", justifyContent: "center", gap: 10, transition: "background 0.2s" }}>
+                {status === "loading" ? <>{I.spinner("#fff")} Wird gesendet…</> : <>Offerte absenden {I.arrowR("#fff")}</>}
+              </button>
+>>>>>>> a37d912 (final image fix done)
               <p style={{ fontFamily: ff, fontSize: 13, color: C.muted, textAlign: "center", marginTop: 4 }}>Oder via <a href={WA_LINK} target="_blank" rel="noopener noreferrer" style={{ color: C.wa, fontWeight: 600, textDecoration: "none" }}>WhatsApp</a></p>
             </div>
           </div>
@@ -671,6 +1101,7 @@ function Contact() {
   );
 }
 
+<<<<<<< HEAD
 /* ══ APP ══ */
 export default function App() {
   const [page, setPage] = useState("home");
@@ -679,20 +1110,66 @@ export default function App() {
     const link  = document.createElement("link");
     link.rel    = "stylesheet";
     // Montserrat added for H1 hero font
+=======
+/* ══════════════════════════════════════════
+   ✅ FIX: App now fetches real projects from
+   backend API and passes them down as props
+   ══════════════════════════════════════════ */
+export default function App() {
+  const [page, setPage]                   = useState("home");
+  const [projects, setProjects]           = useState([]);
+  const [projectsLoading, setProjectsLoading] = useState(true);
+
+  // Load Google Fonts
+  useEffect(() => {
+    const link  = document.createElement("link");
+    link.rel    = "stylesheet";
+>>>>>>> a37d912 (final image fix done)
     link.href   = "https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Montserrat:wght@700;800;900&display=swap";
     document.head.appendChild(link);
+  }, []);
+
+<<<<<<< HEAD
+  const go  = (p) => { setPage(p); window.scrollTo({ top: 0, behavior: "smooth" }); };
+  const cur = SVC.find((s) => s.id === page);
+
+=======
+  // ✅ FIX: Fetch real projects from backend
+  useEffect(() => {
+    fetch(`${API_URL}/api/projects`)
+      .then((r) => r.json())
+      .then((data) => {
+        if (Array.isArray(data)) setProjects(data);
+      })
+      .catch(() => {
+        // silently fail — empty state shown
+      })
+      .finally(() => setProjectsLoading(false));
   }, []);
 
   const go  = (p) => { setPage(p); window.scrollTo({ top: 0, behavior: "smooth" }); };
   const cur = SVC.find((s) => s.id === page);
 
+  // Booking page renders full-screen
+  if (page === "booking") {
+    return <BookingPage onHome={() => go("home")} />;
+  }
+
+>>>>>>> a37d912 (final image fix done)
   return (
     <div style={{ minHeight: "100vh", background: C.white, fontFamily: ff, color: C.dark, overflowX: "hidden", width: "100%" }}>
       <Nav page={page} go={go} />
       <main>
+<<<<<<< HEAD
         {page === "home"     && <Home go={go} />}
         {page === "about"    && <About go={go} />}
         {page === "projekte" && <Projects go={go} />}
+=======
+        {/* ✅ FIX: pass projects + loading to Home and Projects */}
+        {page === "home"     && <Home go={go} projects={projects} projectsLoading={projectsLoading} />}
+        {page === "about"    && <About go={go} />}
+        {page === "projekte" && <Projects go={go} projects={projects} projectsLoading={projectsLoading} />}
+>>>>>>> a37d912 (final image fix done)
         {page === "kontakt"  && <Contact />}
         {cur && <ServicePage s={cur} go={go} />}
       </main>
@@ -705,14 +1182,21 @@ export default function App() {
         "#root{overflow-x:hidden;width:100%;}" +
         "::selection { background:" + C.stoneLight + "; color:" + C.black + "; } " +
         "img{max-width:100%;display:block;}" +
+<<<<<<< HEAD
         /* ── Responsive ── */
+=======
+        "@keyframes spin { to { transform: rotate(360deg); } }" +
+>>>>>>> a37d912 (final image fix done)
         "@media(max-width:860px){" +
           ".dN{display:none!important}" +
           ".mN{display:block!important}" +
           "section{padding-left:16px!important;padding-right:16px!important;}" +
         "}" +
         "@media(max-width:600px){" +
+<<<<<<< HEAD
           "section{padding-top:60px!important;padding-bottom:60px!important;}" +
+=======
+>>>>>>> a37d912 (final image fix done)
           "footer{padding-left:16px!important;padding-right:16px!important;padding-top:48px!important;padding-bottom:28px!important;}" +
         "}"
       }</style>

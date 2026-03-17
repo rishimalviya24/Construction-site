@@ -35,7 +35,15 @@ const deleteFile = (filename) => {
 router.get("/", async (req, res) => {
   try {
     const projects = await Project.find({ published: true }).sort({ createdAt: -1 });
+<<<<<<< HEAD
     res.json(projects.map((p) => ({ ...p.toObject(), mainImageUrl: toUrl(p.mainImage), imageUrls: p.images.map(toUrl) })));
+=======
+    res.json(projects.map((p) => ({
+      ...p.toObject(),
+      mainImageUrl: toUrl(p.mainImage),
+      imageUrls: p.images.map(toUrl),
+    })));
+>>>>>>> a37d912 (final image fix done)
   } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
@@ -43,7 +51,15 @@ router.get("/", async (req, res) => {
 router.get("/all", authMiddleware, async (req, res) => {
   try {
     const projects = await Project.find().sort({ createdAt: -1 });
+<<<<<<< HEAD
     res.json(projects.map((p) => ({ ...p.toObject(), mainImageUrl: toUrl(p.mainImage), imageUrls: p.images.map(toUrl) })));
+=======
+    res.json(projects.map((p) => ({
+      ...p.toObject(),
+      mainImageUrl: toUrl(p.mainImage),
+      imageUrls: p.images.map(toUrl),
+    })));
+>>>>>>> a37d912 (final image fix done)
   } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
@@ -59,12 +75,34 @@ router.get("/:id", async (req, res) => {
 // ADMIN: POST create project
 router.post("/", authMiddleware, uploadFields, async (req, res) => {
   try {
+<<<<<<< HEAD
     const { title, description, location, category, published } = req.body;
     if (!title || !description) return res.status(400).json({ error: "Title and description required" });
     const mainImage = req.files?.mainImage?.[0]?.filename || null;
     const images = (req.files?.images || []).map((f) => f.filename);
     const project = await Project.create({ title, description, location: location || "", category: category || "", mainImage, images, published: published !== "false" });
     res.status(201).json({ ...project.toObject(), mainImageUrl: toUrl(project.mainImage), imageUrls: project.images.map(toUrl) });
+=======
+    const { title, description, location, category, published, youtubeUrl } = req.body;
+    if (!title || !description) return res.status(400).json({ error: "Title and description required" });
+    const mainImage = req.files?.mainImage?.[0]?.filename || null;
+    const images = (req.files?.images || []).map((f) => f.filename);
+    const project = await Project.create({
+      title,
+      description,
+      location: location || "",
+      category: category || "",
+      mainImage,
+      images,
+      published: published !== "false",
+      youtubeUrl: youtubeUrl || "",   // ✅ NEW
+    });
+    res.status(201).json({
+      ...project.toObject(),
+      mainImageUrl: toUrl(project.mainImage),
+      imageUrls: project.images.map(toUrl),
+    });
+>>>>>>> a37d912 (final image fix done)
   } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
@@ -73,12 +111,20 @@ router.put("/:id", authMiddleware, uploadFields, async (req, res) => {
   try {
     const p = await Project.findById(req.params.id);
     if (!p) return res.status(404).json({ error: "Not found" });
+<<<<<<< HEAD
     const { title, description, location, category, published, removeMainImage, removeImages } = req.body;
+=======
+    const { title, description, location, category, published, removeMainImage, removeImages, youtubeUrl } = req.body;
+>>>>>>> a37d912 (final image fix done)
     if (title) p.title = title;
     if (description) p.description = description;
     if (location !== undefined) p.location = location;
     if (category !== undefined) p.category = category;
     if (published !== undefined) p.published = published !== "false";
+<<<<<<< HEAD
+=======
+    if (youtubeUrl !== undefined) p.youtubeUrl = youtubeUrl;  // ✅ NEW
+>>>>>>> a37d912 (final image fix done)
     if (req.files?.mainImage?.[0]) { deleteFile(p.mainImage); p.mainImage = req.files.mainImage[0].filename; }
     else if (removeMainImage === "true") { deleteFile(p.mainImage); p.mainImage = null; }
     if (removeImages) {
@@ -87,7 +133,15 @@ router.put("/:id", authMiddleware, uploadFields, async (req, res) => {
     }
     if (req.files?.images?.length) p.images = [...p.images, ...req.files.images.map((f) => f.filename)];
     await p.save();
+<<<<<<< HEAD
     res.json({ ...p.toObject(), mainImageUrl: toUrl(p.mainImage), imageUrls: p.images.map(toUrl) });
+=======
+    res.json({
+      ...p.toObject(),
+      mainImageUrl: toUrl(p.mainImage),
+      imageUrls: p.images.map(toUrl),
+    });
+>>>>>>> a37d912 (final image fix done)
   } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
